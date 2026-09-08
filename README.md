@@ -8,7 +8,7 @@ unidad de **archivos binarios en C/C++**.
 > _Kevin — articulo13_
 > _Lucas — LucasTosco_
 > _Alexander — acatarialarcon-ship-it_
-> _Bautista — breinautn_
+> _Bautista Reina — breinautn_
 > _Nahuel — NBenitez-UTN_
 
 La consigna completa está en **`enunciado.pdf`**. Leela antes de arrancar: el
