@@ -3,14 +3,13 @@
 Trabajo Práctico grupal de **Algoritmos y Estructuras de Datos** (UTN FRBA) —
 unidad de **archivos binarios en C/C++**.
 
-> **Grupo:** _N°4_ 
+> **Grupo:** _N°4_
 > **Integrantes:**
- _Kevin — articulo13_
- _Lucas — LucasTosco_
- _Alexander — acatarialarcon-ship-it_
- _Bautista — breinautn_
- _Nahuel — NBenitez-UTN_
-                   
+> _Kevin — articulo13_
+> _Lucas — LucasTosco_
+> _Alexander — acatarialarcon-ship-it_
+> _Bautista — breinautn_
+> _Nahuel — NBenitez-UTN_
 
 La consigna completa está en **`enunciado.pdf`**. Leela antes de arrancar: el
 cliente (Alberto) cuenta su problema a su manera y ustedes tienen que descubrir
