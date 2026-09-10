@@ -3,6 +3,10 @@
 #include <cstdio> 
 using namespace std; 
 
+#define MAX_MOZOS 53 
+#define DIAS_SEMANA 7
+
+
 struct comanda
 {
     char fecha[11]; 
@@ -17,21 +21,20 @@ struct comanda
 
 int main(){
 
-FILE* archivo = fopen ("comandas_historicas.dat", "rb");
-if (archivo == NULL)
-{
-    cout << "No es posible abrir el archivo" << endl; 
-    return 0; 
-}
+const char* nombresArchi[DIAS_SEMANA] = {
+"lunes.dat", "martes.dat", "miercoles.dat", "jueves.dat", "viernes.dat", "sabado.dat", "domingo.dat" 
+//Enumera cada archivo que entra, poniendo el lunes como 0 y domingo como 6 en el array DIAS_SEMANA  
+}; 
 
-comanda comandas[1000]; 
-int cantidad = 0; 
-while (fread (&comandas [cantidad], sizeof (comanda),1 , archivo) ==1)
-{
-    cantidad++;
-}
-fclose(archivo); 
+const char* nombresDias[DIAS_SEMANA] = {
+"Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo "
+//En el anterior array guardamos los dias, aca les ponemos nombres en base entran para mostrarlos al final
+}; 
 
+char mozos[MAX_MOZOS][53]; 
+float matriz[MAX_MOZOS][DIAS_SEMANA] ={0}; //creamos la matriz para la planilla 
+int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos al momento
+                    // (no sabemos cuantos pueden llegar a venir)
 
 
 
