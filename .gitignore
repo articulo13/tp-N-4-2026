@@ -7,3 +7,4 @@
 build/
 /*.dat
 .claude/
+cierre.cpp
