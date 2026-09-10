@@ -17,7 +17,7 @@ struct comanda
 
 int main(){
 
-FILE* archivo = fopen ("C:/Users/reina_bjncudd/OneDrive/Documentos/GitHub/tp-N-4-2026/datos/comandas_historicas.dat", "rb");
+FILE* archivo = fopen ("comandas_historicas.dat", "rb");
 if (archivo == NULL)
 {
     cout << "No es posible abrir el archivo" << endl; 
