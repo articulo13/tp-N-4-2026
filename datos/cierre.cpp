@@ -23,7 +23,7 @@ int main(){
 
 const char* nombresArchi[DIAS_SEMANA] = {
 "lunes.dat", "martes.dat", "miercoles.dat", "jueves.dat", "viernes.dat", "sabado.dat", "domingo.dat" 
-//Enumera cada archivo que entra, poniendo el lunes como 0 y domingo como 6 en el array DIAS_SEMANA  
+//Enumera y guarda cada archivo que entra, poniendo el lunes como 0 y domingo como 6 en el array DIAS_SEMANA  
 }; 
 
 const char* nombresDias[DIAS_SEMANA] = {
