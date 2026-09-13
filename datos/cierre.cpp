@@ -1,6 +1,7 @@
 #include <iostream> 
 #include <cstring>
 #include <cstdio> 
+#include <filesystem>
 using namespace std; 
 
 #define MAX_MOZOS 53 
@@ -40,13 +41,35 @@ for (int dia = 0; dia < DIAS_SEMANA; dia++)
 {
    FILE* archivo =fopen(nombresArchi[dia], "rb");  //Abrimos en modo lectura para que lea los archvivos  guardados
 
-   if (archivo == NULL)
-   {
-   cout << "No se pudo abrir el archivo: "<< nombresArchi[dia] << "/n"; 
-   continue; 
-   }
-   
+    if (archivo == NULL)
+    {
+     cout << "No se pudo abrir el archivo: "<< nombresArchi[dia] << "/n"; 
+    continue; //sigue con el resto de dias si flata uno.
+    }
+   comanda c; 
+    while (fread(&c, sizeof(comanda),1, archivo) ==1) 
+{
+        //Vemos si el mozo ya existe en la lista o hay que agregarlo al final.
+        int fmozo = -1; 
+        for (int j = 0; j < totalmozos; j++) //recorre la lista de los nombres hasta terminar el numero de mozos
+        {
+            if (strcmp(mozos[j], c.mozo)== 0) //buscamos coincidencia en los nombres
+            {
+                fmozo = j; 
+                break;
+            }
+        
+    }
+        if (fmozo = -1) //si no se encontro al mozo en la lista, lo agregamos al final y modificamos el numero total de mozos 
+        {
+            strcpy(mozos[totalmozos], c.mozo);
+            fmozo = totalmozos; 
+            totalmozos++; 
+        }
+    
 }
+}
+
 
 
 }
