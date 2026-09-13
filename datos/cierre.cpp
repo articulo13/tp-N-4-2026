@@ -38,7 +38,7 @@ int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos a
 
 for (int dia = 0; dia < DIAS_SEMANA; dia++)
 {
-   FILE* archivo =fopen(nombresArchi[dia], "rb"); 
+   FILE* archivo =fopen(nombresArchi[dia], "rb");  //Abrimos en modo lectura para que lea los archvivos  guardados
    if (archivo == NULL)
    {
    cout << "No se pudo abrir el archivo: "<< nombresArchi[dia] << "/n"; 
