@@ -36,6 +36,16 @@ float matriz[MAX_MOZOS][DIAS_SEMANA] ={0}; //creamos la matriz para la planilla
 int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos al momento
                     // (no sabemos cuantos pueden llegar a venir)
 
+for (int dia = 0; dia < DIAS_SEMANA; dia++)
+{
+   FILE* archivo =fopen(nombresArchi[dia], "rb"); 
+   if (archivo == NULL)
+   {
+   cout << "No se pudo abrir el archivo: "<< nombresArchi[dia] << "/n"; 
+   continue; 
+   }
+   
+}
 
 
 }
