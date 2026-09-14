@@ -13,9 +13,9 @@ struct comanda
 {
     char fecha[11]; //dd/mm/aa
     char mozo[53]; //Nombre Apellido
-    int codprod; 
+    int codprod; //num de 3 digitos 
     int cantidad; 
-    int comision; 
+    int comision; //cantidad ganada en el dia 
 };
 
 
@@ -75,6 +75,9 @@ for (int dia = 0; dia < DIAS_SEMANA; dia++)
     }
     
 }
+
+fclose(archivo); 
+
 }
 
 
