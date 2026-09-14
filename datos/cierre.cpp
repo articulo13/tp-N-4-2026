@@ -1,7 +1,7 @@
 #include <iostream> 
 #include <cstring>
 #include <cstdio> 
-#include <filesystem>
+#include <iomanip>
 using namespace std; 
 
 #define MAX_MOZOS 53 
@@ -15,7 +15,7 @@ struct comanda
     char mozo[53]; //Nombre Apellido
     int codprod; //num de 3 digitos 
     int cantidad; 
-    int comision; //cantidad ganada en el dia 
+    int comision; //cantidad ganada en el dia
 };
 
 
@@ -37,14 +37,14 @@ int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos a
 
 
 
-//Lectura de los 7 archivos. 
+//_______Lectura de los 7 archivos y ubicacion de los mozos_______
 for (int dia = 0; dia < DIAS_SEMANA; dia++)
 {
    FILE* archivo =fopen(nombresArchi[dia], "rb");  //Abrimos en modo lectura para que lea los archvivos guardados.
 
     if (archivo == NULL)
     {
-     cout << "No se pudo abrir el archivo: "<< nombresArchi[dia] << "/n"; 
+     cout << "No se pudo abrir el archivo: "<< nombresArchi[dia] << endl; 
     continue; //sigue con el resto de dias si flata uno.
     }
     
@@ -79,7 +79,8 @@ for (int dia = 0; dia < DIAS_SEMANA; dia++)
 fclose(archivo); 
 
 }
-
+//____________________________________________________________PLANILLA DE LOS MOZOS______________________________________________________________
+cout << left << setw(12) << "FECHA" << setw(17) << "MOZO" << setw(10) << "CODPROD" << setw(10) << "CANTIDAD" << setw(10) << "COMISION" << "\n"; 
 
 
 }
