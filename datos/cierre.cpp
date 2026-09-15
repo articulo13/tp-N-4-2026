@@ -14,8 +14,8 @@ struct comanda
     char fecha[11]; //dd/mm/aa
     char mozo[53]; //Nombre Apellido
     int codprod; //num de 3 digitos 
-    int cantidad; 
-    int comision; //cantidad ganada en el dia
+    int cantidad;//cantidad de comandas
+    int comision; //cantidad ganada
 };
 
 
@@ -33,7 +33,7 @@ int totalregistros = 0;
 
 char mozos[MAX_MOZOS][53]; 
 int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos al momento
-                    // (no sabemos cuantos pueden llegar a venir).
+                    //(no sabemos cuantos pueden llegar a venir).
 
 
 
@@ -80,7 +80,7 @@ fclose(archivo);
 
 }
 //____________________________________________________________PLANILLA DE LOS MOZOS______________________________________________________________
-cout << left << setw(12) << "FECHA" << setw(17) << "MOZO" << setw(10) << "CODPROD" << setw(10) << "CANTIDAD" << setw(10) << "COMISION" << "\n"; 
+cout << left << setw(12) << "FECHA" << setw(20) << "MOZO" << setw(10) << "CODPROD" << setw(10) << "CANTIDAD" << setw(10) << "COMISION" << "\n"; 
 
 
 }
