@@ -34,8 +34,12 @@ struct ComandaHistorica{               //struct del archivo binario con el mismo
 
 
 
-void CargaDatosArchivo(ComandaHistorica aux[30],const char* nombre);  //pasar los registros del archivo a un arreglo auxiliar
+void CargaDatosArchivo(ComandaHistorica aux[],const char* nombre);  //pasar los registros del archivo a un arreglo auxiliar
 void Ordenar(ComandaHistorica aux[]);        //ordenar por seleccion 
+void PasarDatosArchivo(ComandaHistorica aux[]);    //creamos un archivo auxiliar temporal, luego se borrara
+void CorteDeControlArchivo();  //Corte de control con el archivo auxiliar  para generar el  archivo "Mozos.dat"
+
+
 
 int main(){
 	
@@ -45,14 +49,18 @@ int main(){
 	//funciones
     CargaDatosArchivo(aux,nombre);
 	Ordenar(aux);
-	
+	PasarDatosArchivo(aux);
 	
 
 	return 0;
 }
 
 
-void CargaDatosArchivo(ComandaHistorica aux[30], const char* nombre){
+
+
+
+
+void CargaDatosArchivo(ComandaHistorica aux[], const char* nombre){
 	
 	FILE* f = fopen(nombre,"rb");   //abrimos el archivo en modo lectura
 	if(f == NULL){
@@ -70,7 +78,7 @@ void CargaDatosArchivo(ComandaHistorica aux[30], const char* nombre){
 	fclose(f);
 }
 
-void Ordenar(ComandaHistorica aux[30]){
+void Ordenar(ComandaHistorica aux[]){    //ordenamos los datos del arreglo auxiliar por nombre
 	
 	ComandaHistorica caux; // struct auxiliar para  que no se pierdan datos
 	
@@ -87,5 +95,25 @@ void Ordenar(ComandaHistorica aux[30]){
 		aux[i]=aux[min];
 		aux[min]=caux;
 	}
+	
 
+}
+
+
+void PasarDatosArchivo(ComandaHistorica aux[]){          //pasamos los datos del arreglo a un archivo auxiliar
+	
+	FILE*f = fopen("auxiliar.dat","wb");
+	
+	if(f == NULL){
+		
+		cout<<"El archivo no pudo ser creado"<<endl;
+		return;
+	};
+	
+	for(int i=0;i<30;i++){
+	
+	fwrite(&aux[i],sizeof(ComandaHistorica),1,f);
+	}
+	
+	fclose(f);
 }
