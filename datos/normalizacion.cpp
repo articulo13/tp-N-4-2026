@@ -38,6 +38,8 @@ void CargaDatosArchivo(ComandaHistorica aux[],const char* nombre);  //pasar los 
 void Ordenar(ComandaHistorica aux[]);        //ordenar por seleccion 
 void PasarDatosArchivo(ComandaHistorica aux[]);    //creamos un archivo auxiliar temporal, luego se borrara
 void CorteDeControlArchivo();  //Corte de control con el archivo auxiliar  para generar el  archivo "Mozos.dat"
+// PLANILLAS Y STOCK 
+long busquedabinaria(const char* nombre, int codigo, Producto& r); //busqueda binaria para encontrar el stock (mediante las casillas fisicas)
 
 
 
@@ -50,6 +52,8 @@ int main(){
     CargaDatosArchivo(aux,nombre);
 	Ordenar(aux);
 	PasarDatosArchivo(aux);
+	
+	
 	
 
 	return 0;
@@ -116,4 +120,31 @@ void PasarDatosArchivo(ComandaHistorica aux[]){          //pasamos los datos del
 	}
 	
 	fclose(f);
+}
+
+long busquedabinaria(const char* nombre, int codigo, Producto& r){
+	FILE* f = fopen(nombre, "rb");
+    if (f == NULL) return -1;
+
+    fseek(f, 0, SEEK_END);
+    long n = ftell(f) / sizeof(Producto); // Cantidad total de registros
+    long pri = 0, ult = n - 1, pos = -1;
+
+    while (pri <= ult && pos == -1) {
+        long med = (pri + ult) / 2;
+        fseek(f, med * sizeof(Producto), SEEK_SET);
+        fread(&r, sizeof(Producto), 1, f);
+
+        if (r.codigo == codigo) {
+            pos = med;
+        } else if (codigo > r.codigo) {
+            pri = med + 1;
+        } else {
+            ult = med - 1;
+        }
+    }
+
+    fclose(f);
+    return pos;
+
 }
