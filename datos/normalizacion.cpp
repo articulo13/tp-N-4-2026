@@ -40,6 +40,7 @@ void PasarDatosArchivo(ComandaHistorica aux[]);    //creamos un archivo auxiliar
 void CorteDeControlArchivo();  //Corte de control con el archivo auxiliar  para generar el  archivo "Mozos.dat"
 // PLANILLAS Y STOCK 
 long busquedabinaria(const char* nombre, int codigo, Producto& r); //busqueda binaria para encontrar el stock (mediante las casillas fisicas)
+void actualizarStock();
 
 
 
@@ -52,6 +53,7 @@ int main(){
     CargaDatosArchivo(aux,nombre);
 	Ordenar(aux);
 	PasarDatosArchivo(aux);
+	actualizarStock();
 	
 	
 	
@@ -122,7 +124,7 @@ void PasarDatosArchivo(ComandaHistorica aux[]){          //pasamos los datos del
 	fclose(f);
 }
 
-long busquedabinaria(const char* nombre, int codigo, Producto& r){
+long busquedabinaria(const char* nombre, int codigo, Producto& r){ //busqieda de la posicion del producto
 	FILE* f = fopen(nombre, "rb");
     if (f == NULL) return -1;
 
@@ -146,5 +148,36 @@ long busquedabinaria(const char* nombre, int codigo, Producto& r){
 
     fclose(f);
     return pos;
+
+}
+
+void actualizarStock(){ // se actualiza el numero de stock del producto
+	FILE* fCom = fopen("comandas_historicas.dat", "rb");
+	FILE* fInv = fopen("inventario.dat", "rb+");
+	if (fCom == NULL || fInv == NULL) {
+		cout << "Niguno de los archivos se puso abrir"<< endl;
+		if (fCom != NULL) fclose(fCom);
+		if (fInv != NULL) fclose(fInv);
+		return;
+	}
+
+	ComandaHistorica comanda;
+	Producto prod;
+	while (fread(&comanda, sizeof(ComandaHistorica), 1, fCom) == 1){ // bucle de lectura
+		long pos = busquedabinaria( "inventario.dat", comanda.codProd, prod);
+			if (pos != -1){
+			prod.stockActual -= comanda.cantidad;
+			fseek(fInv, pos * sizeof(Producto), SEEK_SET); // descuenta del archivo inventario
+			fwrite(&prod, sizeof(Producto), 1, fInv);
+		}else{
+			cout <<"No se encontro el prodcuto para descontar el stock" <<endl;
+		}
+		
+	}
+
+	fclose(fCom);
+	fclose(fInv);
+
+
 
 }
