@@ -33,6 +33,7 @@ struct ComandaHistorica{               //struct del archivo binario con el mismo
 };
 
 
+void Regisros(); //crear una funcion para calcular la cantidad de registros  y cambiar parametros de otras  funciones
 
 void CargaDatosArchivo(ComandaHistorica aux[],const char* nombre);  //pasar los registros del archivo a un arreglo auxiliar
 void Ordenar(ComandaHistorica aux[]);        //ordenar por seleccion 
@@ -53,6 +54,7 @@ int main(){
     CargaDatosArchivo(aux,nombre);
 	Ordenar(aux);
 	PasarDatosArchivo(aux);
+	CorteDeControlArchivo();
 	actualizarStock();
 	
 	
@@ -122,6 +124,58 @@ void PasarDatosArchivo(ComandaHistorica aux[]){          //pasamos los datos del
 	}
 	
 	fclose(f);
+}
+
+void CorteDeControlArchivo(){
+	
+	ComandaHistorica ch;
+	mozo m;
+	FILE* a= fopen("auxiliar.dat","rb");
+	FILE* b= fopen("mozos.dat","wb");
+	
+	if(a == NULL){
+		
+		cout<<"No se pudo abrir el archivo"<<endl;
+		return;
+	}
+	if(b == NULL){
+		
+		cout<<"No se pudo crear el archivo"<<endl;
+	}
+	
+	int leido = fread(&ch,sizeof(ComandaHistorica),1,a);
+	int contador_id=1;
+	
+	
+	while(leido==1){
+		
+		float cont_comision_mozo=0;
+		char campo_clave[50];
+		strcpy(campo_clave, ch.nombreMozo);
+		
+	    strcpy(m.nombre, ch.nombreMozo);;
+		m.id=contador_id;
+		contador_id++;
+		
+		//agregar obtencion de clave
+		
+		while(leido==1 && strcmp(campo_clave, ch.nombreMozo) == 0){
+			
+	        cont_comision_mozo=ch.comision+cont_comision_mozo;
+	        
+	        leido=fread(&ch,sizeof(ComandaHistorica),1,a);
+			
+		}
+		m.TotalComision=cont_comision_mozo;
+		
+		fwrite(&m,sizeof(mozo),1,b);
+	}
+	
+	fclose(a);
+	fclose(b);
+	remove("auxiliar.dat");
+	
+	
 }
 
 long busquedabinaria(const char* nombre, int codigo, Producto& r){ //busqieda de la posicion del producto
