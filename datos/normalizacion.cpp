@@ -33,11 +33,10 @@ struct ComandaHistorica{               //struct del archivo binario con el mismo
 };
 
 
-void Regisros(); //crear una funcion para calcular la cantidad de registros  y cambiar parametros de otras  funciones
-
+void CalcularRegistros(const char* nombre, int& x); 
 void CargaDatosArchivo(ComandaHistorica aux[],const char* nombre);  //pasar los registros del archivo a un arreglo auxiliar
-void Ordenar(ComandaHistorica aux[]);        //ordenar por seleccion 
-void PasarDatosArchivo(ComandaHistorica aux[]);    //creamos un archivo auxiliar temporal, luego se borrara
+void Ordenar(ComandaHistorica aux[],int cantr);        //ordenar por seleccion 
+void PasarDatosArchivo(ComandaHistorica aux[],int cantr);    //creamos un archivo auxiliar temporal, luego se borrara
 void CorteDeControlArchivo();  //Corte de control con el archivo auxiliar  para generar el  archivo "Mozos.dat"
 // PLANILLAS Y STOCK 
 long busquedabinaria(const char* nombre, int codigo, Producto& r); //busqueda binaria para encontrar el stock (mediante las casillas fisicas)
@@ -47,13 +46,15 @@ void actualizarStock();
 
 int main(){
 	
+	int cantidad_registros;
 	ComandaHistorica aux[30]={}; //arreglo auxiliar para ordenar los registros del archivo comanda_historica por nombre
 	const char nombre[] = "comandas_historicas.dat";
 	
 	//funciones
+	CalcularRegistros(nombre,cantidad_registros);
     CargaDatosArchivo(aux,nombre);
-	Ordenar(aux);
-	PasarDatosArchivo(aux);
+	Ordenar(aux,cantidad_registros);
+	PasarDatosArchivo(aux,cantidad_registros);
 	CorteDeControlArchivo();
 	actualizarStock();
 	
@@ -63,10 +64,22 @@ int main(){
 	return 0;
 }
 
-
-
-
-
+void CalcularRegistros(const char* nombre, int& x){
+	
+	FILE*f = fopen(nombre,"rb");
+	
+	if(f ==NULL){
+		
+		cout<<"No se pudo abrir el archivo"<<endl;
+		return;
+	}
+	
+	fseek(f,0,SEEK_END);
+	
+   long y = ftell(f)/ sizeof(ComandaHistorica);
+	x=y;
+	fclose(f);
+}
 
 void CargaDatosArchivo(ComandaHistorica aux[], const char* nombre){
 	
@@ -86,14 +99,14 @@ void CargaDatosArchivo(ComandaHistorica aux[], const char* nombre){
 	fclose(f);
 }
 
-void Ordenar(ComandaHistorica aux[]){    //ordenamos los datos del arreglo auxiliar por nombre
+void Ordenar(ComandaHistorica aux[],int cantr){    //ordenamos los datos del arreglo auxiliar por nombre
 	
 	ComandaHistorica caux; // struct auxiliar para  que no se pierdan datos
 	
-	for(int i=0;i<29;i++){
+	for(int i=0;i<cantr-1;i++){
 		
 		int min=i;
-		for(int j=i+1;j<30;j++){
+		for(int j=i+1;j<cantr;j++){
 			
 			if( strcmp(aux[min].nombreMozo,aux[j].nombreMozo)>0){    //comparamos los nombres de cada  mozo para ordenarlos
 				min=j;	
@@ -102,14 +115,17 @@ void Ordenar(ComandaHistorica aux[]){    //ordenamos los datos del arreglo auxil
 		caux=aux[i];     //intercambiamos los datos de los registros
 		aux[i]=aux[min];
 		aux[min]=caux;
+		
+		
 	}
 	
 
 }
 
 
-void PasarDatosArchivo(ComandaHistorica aux[]){          //pasamos los datos del arreglo a un archivo auxiliar
+void PasarDatosArchivo(ComandaHistorica aux[], int cantr){          //pasamos los datos del arreglo a un archivo auxiliar
 	
+	ComandaHistorica m;
 	FILE*f = fopen("auxiliar.dat","wb");
 	
 	if(f == NULL){
@@ -118,11 +134,10 @@ void PasarDatosArchivo(ComandaHistorica aux[]){          //pasamos los datos del
 		return;
 	};
 	
-	for(int i=0;i<30;i++){
+	for(int i=0;i<cantr;i++){
 	
 	fwrite(&aux[i],sizeof(ComandaHistorica),1,f);
 	}
-	
 	fclose(f);
 }
 
@@ -141,6 +156,7 @@ void CorteDeControlArchivo(){
 	if(b == NULL){
 		
 		cout<<"No se pudo crear el archivo"<<endl;
+		return;
 	}
 	
 	int leido = fread(&ch,sizeof(ComandaHistorica),1,a);
@@ -153,11 +169,11 @@ void CorteDeControlArchivo(){
 		char campo_clave[50];
 		strcpy(campo_clave, ch.nombreMozo);
 		
-	    strcpy(m.nombre, ch.nombreMozo);;
+	    strcpy(m.nombre, ch.nombreMozo);
 		m.id=contador_id;
 		contador_id++;
 		
-		//agregar obtencion de clave
+		//agregar obtencion de clave...
 		
 		while(leido==1 && strcmp(campo_clave, ch.nombreMozo) == 0){
 			
@@ -177,6 +193,8 @@ void CorteDeControlArchivo(){
 	
 	
 }
+
+
 
 long busquedabinaria(const char* nombre, int codigo, Producto& r){ //busqieda de la posicion del producto
 	FILE* f = fopen(nombre, "rb");
