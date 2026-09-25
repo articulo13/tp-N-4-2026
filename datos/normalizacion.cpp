@@ -34,9 +34,8 @@ struct ComandaHistorica{               //struct del archivo binario con el mismo
 
 
 void CalcularRegistros(const char* nombre, int& x); 
-void CargaDatosArchivo(ComandaHistorica aux[],const char* nombre);  //pasar los registros del archivo a un arreglo auxiliar
-void Ordenar(ComandaHistorica aux[],int cantr);        //ordenar por seleccion 
-void PasarDatosArchivo(ComandaHistorica aux[],int cantr);    //creamos un archivo auxiliar temporal, luego se borrara
+void CrearArchiAux(const char* nombre);
+void OrdenarArchivo(const char* nombre,int x);
 void CorteDeControlArchivo();  //Corte de control con el archivo auxiliar  para generar el  archivo "Mozos.dat"
 // PLANILLAS Y STOCK 
 long busquedabinaria(const char* nombre, int codigo, Producto& r); //busqueda binaria para encontrar el stock (mediante las casillas fisicas)
@@ -52,9 +51,8 @@ int main(){
 	
 	//funciones
 	CalcularRegistros(nombre,cantidad_registros);
-    CargaDatosArchivo(aux,nombre);
-	Ordenar(aux,cantidad_registros);
-	PasarDatosArchivo(aux,cantidad_registros);
+	CrearArchiAux(nombre);
+    OrdenarArchivo("auxiliar.dat",cantidad_registros);
 	CorteDeControlArchivo();
 	actualizarStock();
 	
@@ -80,66 +78,39 @@ void CalcularRegistros(const char* nombre, int& x){
 	x=y;
 	fclose(f);
 }
-
-void CargaDatosArchivo(ComandaHistorica aux[], const char* nombre){
-	
-	FILE* f = fopen(nombre,"rb");   //abrimos el archivo en modo lectura
-	if(f == NULL){
-		
-		cout<<"No  se pudo abrir el archivo"<<endl;
-		return;
-	}
-	
-		int i=0;
-	
-	while(fread(&aux[i],sizeof(ComandaHistorica),1,f)==1){
-		i++;
-	}
-	
-	fclose(f);
-}
-
-void Ordenar(ComandaHistorica aux[],int cantr){    //ordenamos los datos del arreglo auxiliar por nombre
-	
-	ComandaHistorica caux; // struct auxiliar para  que no se pierdan datos
-	
-	for(int i=0;i<cantr-1;i++){
-		
-		int min=i;
-		for(int j=i+1;j<cantr;j++){
-			
-			if( strcmp(aux[min].nombreMozo,aux[j].nombreMozo)>0){    //comparamos los nombres de cada  mozo para ordenarlos
-				min=j;	
-			}
-		}
-		caux=aux[i];     //intercambiamos los datos de los registros
-		aux[i]=aux[min];
-		aux[min]=caux;
-		
-		
-	}
-	
-
-}
-
-
-void PasarDatosArchivo(ComandaHistorica aux[], int cantr){          //pasamos los datos del arreglo a un archivo auxiliar
+void CrearArchiAux(const  char* nombre){
 	
 	ComandaHistorica m;
-	FILE*f = fopen("auxiliar.dat","wb");
 	
-	if(f == NULL){
-		
-		cout<<"El archivo no pudo ser creado"<<endl;
+	FILE*a = fopen(nombre,"rb");
+	FILE*b = fopen("auxiliar.dat","wb");
+	
+	if(a == NULL ){
+		cout<<"No se pudo abrir el archivo"<<endl;
 		return;
-	};
-	
-	for(int i=0;i<cantr;i++){
-	
-	fwrite(&aux[i],sizeof(ComandaHistorica),1,f);
 	}
-	fclose(f);
+	if(b == NULL){
+		
+		cout<<"No se pudo crear/abrir el archivo"<<endl;
+		return;
+	}
+	
+	while(fread(&m,sizeof(ComandaHistorica),1,a)==1){
+		
+		fwrite(&m,sizeof(ComandaHistorica),1,b);
+	}
+	
+	fclose(a);
+	fclose(b);
 }
+void OrdenarArchivo(const char* nombre,int x){
+	
+	
+	
+	
+
+}
+
 
 void CorteDeControlArchivo(){
 	
