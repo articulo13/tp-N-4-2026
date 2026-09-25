@@ -32,7 +32,6 @@ struct ComandaHistorica{               //struct del archivo binario con el mismo
 	float comision;
 };
 
-
 void CalcularRegistros(const char* nombre, int& x); 
 void CrearArchiAux(const char* nombre);
 void OrdenarArchivo(const char* nombre,int x);
@@ -103,12 +102,56 @@ void CrearArchiAux(const  char* nombre){
 	fclose(a);
 	fclose(b);
 }
+
 void OrdenarArchivo(const char* nombre,int x){
 	
+	FILE*a = fopen(nombre,"rb+"); //abrimos el archivo  en modo lectura y escribir
+	
+	if(a == NULL){
+		
+		cout<<"No se pudo abrir el archivo"<<endl;
+		return;
+	}
+	
+	ComandaHistorica  m,n; //declaramos variables
 	
 	
-	
+	for(int i=0;i<x-1;i++){
+			int pos=i;    //asumimos al primero en cada vuelta del primer for como el minimo
+			
+		fread(&m,sizeof(ComandaHistorica),1,a); //el puntero avanza un lugar y guarda en la variable m el primer registro
+		
+		char minimo[50];
+		strcpy(minimo,m.nombreMozo);  //copiamos en minimo el contenido del segundo parametro
+        
+		for(int j=i+1;j<x;j++){
+			fread(&m,sizeof(ComandaHistorica),1,a); //el puntero avanza un lugar mas  y guarda en m otro valor, lo que nos permite ir comparando los nombres
+			if(strcmp(minimo,m.nombreMozo)>0){ 
+				
+			    strcpy(minimo,m.nombreMozo);
+				pos=j;
+			}
+		}
+		
+		fseek(a,pos*sizeof(ComandaHistorica),SEEK_SET); //el puntero se posiciona en el registro con  el menor valor 
+		fread(&m,sizeof(ComandaHistorica),1,a);      // guardamos el valor del dato de ese registro
+		
+		fseek(a,i*sizeof(ComandaHistorica),SEEK_SET); //el puntero se posiciona en nuestro primer registro desordenado
+		fread(&n,sizeof(ComandaHistorica),1,a);   //guardamos el valor
+		
+		
+		 //INTERCAMBIO DE VALORES
+		fseek(a,i*sizeof(ComandaHistorica),SEEK_SET);   //nos posicionamos en el primer registro desordenado
+		fwrite(&m,sizeof(ComandaHistorica),1,a);    //guardamos los datos del registro con el menor valor en el primer registro desordenado
+		
+	    fseek(a,pos*sizeof(ComandaHistorica),SEEK_SET);   //nos posicionamos en el lugar del registro con menor valor
+	    fwrite(&n,sizeof(ComandaHistorica),1,a);         // guardamos los datos del registro desordenado en esa posicion
+		
+		fseek(a,(i+1)*sizeof(ComandaHistorica),SEEK_SET);  // como ya intercambiamos los valores, debemos cambiar la posicion del puntero hacai el siguiente registro no ordenado
+		
+	}	
 
+    fclose(a); //cerramos  el archivo
 }
 
 
@@ -156,6 +199,7 @@ void CorteDeControlArchivo(){
 		m.TotalComision=cont_comision_mozo;
 		
 		fwrite(&m,sizeof(mozo),1,b);
+		
 	}
 	
 	fclose(a);
