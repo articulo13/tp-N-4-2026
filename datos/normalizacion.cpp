@@ -17,7 +17,7 @@ struct mozo{
 	
 	int id;
 	char nombre[50];
-	char password[50];  
+	char password[20];  
 	float TotalComision;
 	
 	
@@ -45,14 +45,16 @@ void actualizarStock();
 int main(){
 	
 	int cantidad_registros;
-	ComandaHistorica aux[30]={}; //arreglo auxiliar para ordenar los registros del archivo comanda_historica por nombre
 	const char nombre[] = "comandas_historicas.dat";
+	
 	
 	//funciones
 	CalcularRegistros(nombre,cantidad_registros);
 	CrearArchiAux(nombre);
     OrdenarArchivo("auxiliar.dat",cantidad_registros);
 	CorteDeControlArchivo();
+	
+	//PLANILLAS Y STOCK
 	actualizarStock();
 	
 	
@@ -154,11 +156,41 @@ void OrdenarArchivo(const char* nombre,int x){
     fclose(a); //cerramos  el archivo
 }
 
+void IncripitarClave(mozo& m){
+	
+	int espacios;
+		
+		do{	
+		    espacios=0;
+			cout<<"Ingrese una clave para el MOZO con la ID "<<m.id<<" (la clave debe ser sin espacios): "<<endl; //pedimos al usuario que ingrese una clave
+		    cin.getline(m.password,20);
+			
+			
+			for(int i=0;m.password[i]!='\0';i++){        //verificamos ue la calve no  tenga espacios
+				
+				if(m.password[i]==' '){	
+					espacios++;
+					cout<<"\nLa clave no debe tener  espacios"<<endl<<endl;
+					break;
+				}
+				
+			}
+		}while(espacios>0);
+		
+		for(int j=0; m.password[j]!='\0';j++){    //realizamos la encriptacion de la clave, para que no se guarde tal cual en  el archivo mozos.dat
+			
+			m.password[j]=m.password[j]+3;
+		};
+
+}
+
 
 void CorteDeControlArchivo(){
 	
+	
 	ComandaHistorica ch;
 	mozo m;
+	
 	FILE* a= fopen("auxiliar.dat","rb");
 	FILE* b= fopen("mozos.dat","wb");
 	
@@ -172,6 +204,7 @@ void CorteDeControlArchivo(){
 		cout<<"No se pudo crear el archivo"<<endl;
 		return;
 	}
+	
 	
 	int leido = fread(&ch,sizeof(ComandaHistorica),1,a);
 	int contador_id=1;
@@ -187,7 +220,13 @@ void CorteDeControlArchivo(){
 		m.id=contador_id;
 		contador_id++;
 		
-		//agregar obtencion de clave...
+		//Incriptacion de Clave
+	
+	
+		IncripitarClave(m);
+		
+		
+		///
 		
 		while(leido==1 && strcmp(campo_clave, ch.nombreMozo) == 0){
 			
@@ -200,8 +239,11 @@ void CorteDeControlArchivo(){
 		
 		fwrite(&m,sizeof(mozo),1,b);
 		
+		
 	}
 	
+	
+
 	fclose(a);
 	fclose(b);
 	remove("auxiliar.dat");
