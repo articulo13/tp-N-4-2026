@@ -36,14 +36,14 @@ int cargarMozo(Mozo lista[]) {
         return 1;
     }
 
-    int cantidadMozo = 0;
+    int MozosCargados = 0;
 
-    while(cantidadMozo < MAX_MOZOS && fread (&lista[cantidadMozo], sizeof(Mozo), 1, archivoMozo)) {
-        cantidadMozo++;
+    while(MozosCargados < MAX_MOZOS && fread (&lista[MozosCargados], sizeof(Mozo), 1, archivoMozo)) {
+        MozosCargados++;
     }
 
     fclose (archivoMozo);
-    return cantidadMozo;
+    return MozosCargados;
 }
 
 int cargarProducto(Producto lista[]) {
@@ -53,12 +53,30 @@ int cargarProducto(Producto lista[]) {
         return 1;
     }
 
-    int cantidadProducto = 0;
+    int ProductosCargados = 0;
 
-    while(cantidadProducto < MAX_PRODUCTOS && fread(&lista[cantidadProducto], sizeof(Producto), 1, archivoProducto)) {
-        cantidadProducto++;
+    while(ProductosCargados < MAX_PRODUCTOS && fread(&lista[ProductosCargados], sizeof(Producto), 1, archivoProducto)) {
+        ProductosCargados++;
     }
 
     fclose(archivoProducto);
-    return cantidadProducto;
+    return ProductosCargados;
+}
+
+int main () {
+    Mozo listaMozos[MAX_MOZOS];
+    Producto listaProductos[MAX_PRODUCTOS];
+
+    int cantidadMozos = cargarMozo(listaMozos);
+    if (cantidadMozos == -1) {
+        return 1;
+    }
+
+    int cantidadProductos = cargarProducto(listaProductos);
+    if (cantidadProductos == -1) {
+        return 1;
+    }
+
+    cout << "Se cargaron: " << cantidadMozos << " Mozos y " << cantidadProductos << " Productos." << endl;
+    
 }
