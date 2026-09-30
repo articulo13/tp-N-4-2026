@@ -78,5 +78,10 @@ int main () {
     }
 
     cout << "Se cargaron: " << cantidadMozos << " Mozos y " << cantidadProductos << " Productos." << endl;
-    
+ 
+    char fecha[11];
+
+    cout << "Ingrese la fecha de hoy (DD-MM-AAAA)" << endl;
+    cin >> fecha;
+
 }
