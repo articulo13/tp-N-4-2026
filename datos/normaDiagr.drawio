@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="Z00XMvlo1UtUeYB3_568" name="Página-1">
-        <mxGraphModel dx="1123" dy="397" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1321" dy="466" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -148,23 +148,32 @@
                 <mxCell id="35" value="Por que?&lt;br&gt;los codigos de los productos estan ordenados pero no estan de manera recurrente (1,2,3,4....n)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="850" y="645" width="360" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="36" value="" style="endArrow=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="37">
+                <mxCell id="36" value="" style="endArrow=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="37" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="790" y="720" as="sourcePoint"/>
                         <mxPoint x="790" y="690" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="37" value="creo la funcion busqueda binaria" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="37" value="creo la funcion busqueda binaria" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="730" y="740" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="38" value="" style="endArrow=none;html=1;" edge="1" parent="1">
+                <mxCell id="38" value="" style="endArrow=none;html=1;" parent="1" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="790" y="840" as="sourcePoint"/>
                         <mxPoint x="790" y="800" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="39" value="creo la funcion actualizar stock&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="39" value="creo la funcion actualizar stock&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="730" y="840" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="usando la funcion de busqueda binaria&amp;nbsp;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="860" y="855" width="230" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="separar por fechas, usar el id y ordenar" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="390" y="450" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="nada mas que agregar&lt;div&gt;&amp;nbsp;literalmente tenemos&amp;nbsp;&lt;div&gt;que hacer eso con el archivo viejo&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="510" y="360" width="200" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
