@@ -2,6 +2,7 @@
 #include <cstring>
 #include <cstdio> 
 #include <iomanip>
+#include <vector>
 using namespace std; 
 
 #define MAX_MOZOS 53 
@@ -35,6 +36,7 @@ char mozos[MAX_MOZOS][53];
 int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos al momento
                     //(no sabemos cuantos pueden llegar a venir).
 
+vector<comanda> matriz[MAX_MOZOS]; 
 
 
 //_______Lectura de los 7 archivos y ubicacion de los mozos_______
@@ -56,24 +58,27 @@ for (int dia = 0; dia < DIAS_SEMANA; dia++)
     totalregistros++; 
     
     //Empieza a almacenar los que se repiten.
-    int existe = 0; 
+    int fmozo = -1; 
     for (int j = 0; j < totalmozos; j++)
     {
        if (strcmp(mozos[j], c.mozo)== 0)
        {
-        existe = 1; 
+        fmozo = j; 
         break; 
        }
        
     }
     
     //Agrega a los que nuevos (los que no aparecieron anteriormente).
-    if (!existe)
+    if (fmozo == -1)
     {
         strcpy(mozos[totalmozos], c.mozo);
+        fmozo = totalmozos; 
         totalmozos++; 
     }
     
+    //agrega la comanda al final del vector de ese mozo
+    matriz[fmozo].push_back(c); 
 }
 
 fclose(archivo); 
