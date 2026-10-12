@@ -5,6 +5,7 @@
 using namespace std;
 
 const float TASA_COMISION = 0.10f;
+const int K = 5;
 const int MAX_MOZOS = 100;
 const int MAX_PRODUCTOS = 100;
 
@@ -76,6 +77,46 @@ bool comprobandoFecha (char fecha[]) {
     return true;
 }
 
+void encriptar (char clave[]) {
+    for (int i = 0; clave[i] != '\0'; i++) {
+        clave[i] = clave[i] + K;
+    }
+}
+
+int buscarMozo(int idBuscado, Mozo lista[], int cantidad) {
+    for (int i = 0; i < cantidad; i++) {
+        if (lista[i].idMozo == idBuscado) {
+            return 1;
+        }
+    }
+    return -1;
+}
+
+int login(Mozo lista[], int cantidad) {
+    int id;
+    char clave[20];
+
+    cout << "ingrese su ID de mozo: ";
+    cin >> id;
+
+    int pos = buscarMozo(id, lista, cantidad);
+    if (pos == -1) {
+        cout << "ID de mozo invalido." << endl;
+        return -1;
+    }
+
+    cout << "ingrese su contraseña: ";
+    cin.ignore();
+    cin.getline(clave, 20);
+    encriptar(clave);
+
+    if (strcmp(clave, lista[pos].password) != 0) {
+        cout << "contraseña incorrecta." << endl;
+        return -1;
+    }
+    return pos;
+}
+
 int main () {
     Mozo listaMozos[MAX_MOZOS];
     Producto listaProductos[MAX_PRODUCTOS];
@@ -91,6 +132,13 @@ int main () {
     }
 
     cout << "Se cargaron: " << cantidadMozos << " Mozos y " << cantidadProductos << " Productos." << endl;
+
+    int posMozo = login(listaMozos, cantidadMozos);
+    if (posMozo == -1) {
+        cout << "Error al iniciar sesion." << endl;
+    } else {
+        cout << "Bienvenido, " << listaMozos[posMozo].nombre << endl;
+    }
  
     char fecha[11];
 
@@ -107,5 +155,8 @@ int main () {
     strcpy(nombreArchivo, "comandas_");
     strcat(nombreArchivo, fecha);
     strcat(nombreArchivo, ".dat");
+
+    cout << "Archivo del dia: " << nombreArchivo << endl;
     
+    return 0;
 }
