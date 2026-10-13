@@ -117,6 +117,82 @@ int login(Mozo lista[], int cantidad) {
     return pos;
 }
 
+int buscarProducto(int codigoBuscado, Producto lista[], int cantidad) {
+    for (int i = 0; i < cantidad; i++) {
+        if (lista[i].codigo == codigoBuscado) {
+            return 1;
+        }
+    }
+    return -1;
+}
+
+float calcularComision(float precio, int cantidad) {
+    return precio * cantidad * TASA_COMISION;
+}
+
+
+bool guardarComanda(char nombreArchivo[], Comanda c) {
+    FILE* archivo = fopen(nombreArchivo, "ab");
+    if (archivo == NULL) {
+        cout << "Error al abrir " << nombreArchivo << endl;
+        return false;
+    }
+ 
+    fwrite(&c, sizeof(Comanda), 1, archivo);
+    fclose(archivo);
+    return true;
+}
+ 
+void cargarVenta(Mozo listaMozos[], int cantidadMozos, Producto listaProductos[], int cantidadProductos, char nombreArchivo[]) {
+    int posMozo = login(listaMozos, cantidadMozos);
+    if (posMozo == -1) {
+        cout << "Venta descartada." << endl;
+        return;
+    }
+ 
+    int codigo;
+    cout << "Ingrese el codigo del producto: ";
+    cin >> codigo;
+ 
+    int posProducto = buscarProducto(codigo, listaProductos, cantidadProductos);
+    if (posProducto == -1) {
+        cout << "El producto no existe." << endl;
+        return;
+    }
+ 
+    cout << "Producto: " << listaProductos[posProducto].descripcion
+         << " - Precio: $" << listaProductos[posProducto].precio
+         << " - Stock: " << listaProductos[posProducto].stockActual << endl;
+ 
+    int cantidad;
+    cout << "Ingrese la cantidad: ";
+    cin >> cantidad;
+ 
+    if (cantidad <= 0) {
+        cout << "Cantidad invalida." << endl;
+        return;
+    }
+    if (cantidad > listaProductos[posProducto].stockActual) {
+        cout << "Stock insuficiente." << endl;
+        return;
+    }
+ 
+    Comanda c;
+    c.idMozo = listaMozos[posMozo].idMozo;
+    c.codigoProducto = listaProductos[posProducto].codigo;
+    c.cantidad = cantidad;
+    c.comision = calcularComision(listaProductos[posProducto].precio, cantidad);
+ 
+    if (!guardarComanda(nombreArchivo, c)) {
+        cout << "No se pudo guardar la venta." << endl;
+        return;
+    }
+ 
+    listaProductos[posProducto].stockActual = listaProductos[posProducto].stockActual - cantidad;
+ 
+    cout << "Venta guardada. Comision: $" << c.comision << endl;
+}
+
 int main () {
     Mozo listaMozos[MAX_MOZOS];
     Producto listaProductos[MAX_PRODUCTOS];
@@ -158,5 +234,20 @@ int main () {
 
     cout << "Archivo del dia: " << nombreArchivo << endl;
     
-    return 0;
+    int opcion = -1;
+    while (opcion != 0) {
+        cout << endl;
+        cout << "===== MENU =====" << endl;
+        cout << "1. Cargar venta" << endl;
+        cout << "0. Salir" << endl;
+        cout << "Opcion: ";
+        cin >> opcion;
+ 
+        if (opcion == 1) {
+            cargarVenta(listaMozos, cantidadMozos, listaProductos, cantidadProductos, nombreArchivo);
+        } else if (opcion != 0) {
+            cout << "Opcion invalida." << endl;
+        }
+    }
+    return 0;  
 }
