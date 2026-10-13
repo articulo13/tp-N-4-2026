@@ -48,7 +48,8 @@ void CorteDeControlArchivo();  //Corte de control con el archivo auxiliar  para 
 long busquedabinaria(const char* nombre, int codigo, Producto& r); //busqueda binaria para encontrar el stock (mediante las casillas fisicas)
 void actualizarStock();
 int obtenerIdMozo(const char* nombreBuscado); // para poder generar las plinllas por dia
-void GenerarPlaniDia();
+void generarPlanillasPorDia();
+void ordenarPlanillaDia(const char* nombreArchivo);
 
 
 //MAIN -----------------------------------------------------------------------------------------------
@@ -66,6 +67,8 @@ int main(){
 	
 	//PLANILLAS Y STOCK
 	actualizarStock();
+	generarPlanillasPorDia();
+	
 	
 	
 	
@@ -382,4 +385,34 @@ void generarPlanillasPorDia() {
     }
 
     fclose(fHist);
+}
+
+void ordenarPlanillaDia(const char* nombreArchivo) {
+    FILE* f = fopen(nombreArchivo, "rb+");
+    if (f == NULL) return;
+
+    fseek(f, 0, SEEK_END);
+    int cantRegistros = ftell(f) / sizeof(Comanda);
+
+    Comanda c1, c2;
+
+    for (int i = 0; i < cantRegistros - 1; i++) {
+        for (int j = i + 1; j < cantRegistros; j++) {
+            fseek(f, i * sizeof(Comanda), SEEK_SET);
+            fread(&c1, sizeof(Comanda), 1, f);
+
+            fseek(f, j * sizeof(Comanda), SEEK_SET);
+            fread(&c2, sizeof(Comanda), 1, f);
+
+            if (c1.idMozo > c2.idMozo) {
+                fseek(f, i * sizeof(Comanda), SEEK_SET);
+                fwrite(&c2, sizeof(Comanda), 1, f);
+
+                fseek(f, j * sizeof(Comanda), SEEK_SET);
+                fwrite(&c1, sizeof(Comanda), 1, f);
+            }
+        }
+    }
+
+    fclose(f);
 }
