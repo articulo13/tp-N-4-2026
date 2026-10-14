@@ -8,6 +8,7 @@ const float TASA_COMISION = 0.10f;
 const int K = 5;
 const int MAX_MOZOS = 100;
 const int MAX_PRODUCTOS = 100;
+const int MAX_COMANDAS = 1000;
 
 struct Mozo {
     int idMozo;
@@ -30,7 +31,7 @@ struct Comanda {
     float comision;
 };
 
-int cargarMozo(Mozo lista[]) {
+int cargarMozo(Mozo lista[]) { // CARGAR LOS MOZOS de "mozos.dat"
     FILE* archivoMozo = fopen("mozos.dat", "rb");
     if(archivoMozo == NULL) {
         cout << "Error al abrir mozos.dat" << endl;
@@ -47,7 +48,7 @@ int cargarMozo(Mozo lista[]) {
     return MozosCargados;
 }
 
-int cargarProducto(Producto lista[]) {
+int cargarProducto(Producto lista[]) { // CARGAR LOS PRODUCTOS DE "inventario.dat"
     FILE* archivoProducto = fopen("inventario.dat", "rb");
     if(archivoProducto == NULL) {
         cout << "Error al abrir inventario.dat" << endl;
@@ -63,8 +64,7 @@ int cargarProducto(Producto lista[]) {
     fclose(archivoProducto);
     return ProductosCargados;
 }
-
-bool comprobandoFecha (char fecha[]) {
+bool comprobandoFecha (char fecha[]) { // COMPROBAR QUE LA FECHA ESTE BIEN PUESTA
     if (strlen(fecha) != 10) {
         return false;
     }
@@ -77,7 +77,7 @@ bool comprobandoFecha (char fecha[]) {
     return true;
 }
 
-void encriptar (char clave[]) {
+void encriptar (char clave[]) { // ENCRIPTAR LAS CLAVES DE LOS MOZOS
     for (int i = 0; clave[i] != '\0'; i++) {
         clave[i] = clave[i] + K;
     }
@@ -86,13 +86,13 @@ void encriptar (char clave[]) {
 int buscarMozo(int idBuscado, Mozo lista[], int cantidad) {
     for (int i = 0; i < cantidad; i++) {
         if (lista[i].idMozo == idBuscado) {
-            return 1;
+            return i;
         }
     }
     return -1;
 }
 
-int login(Mozo lista[], int cantidad) {
+int login(Mozo lista[], int cantidad) { // PIDE ID Y CLAVE DE LOS MOZOS
     int id;
     char clave[20];
 
@@ -105,13 +105,13 @@ int login(Mozo lista[], int cantidad) {
         return -1;
     }
 
-    cout << "ingrese su contraseña: ";
+    cout << "ingrese su clave: ";
     cin.ignore();
     cin.getline(clave, 20);
     encriptar(clave);
 
     if (strcmp(clave, lista[pos].password) != 0) {
-        cout << "contraseña incorrecta." << endl;
+        cout << "clave incorrecta." << endl;
         return -1;
     }
     return pos;
@@ -120,7 +120,7 @@ int login(Mozo lista[], int cantidad) {
 int buscarProducto(int codigoBuscado, Producto lista[], int cantidad) {
     for (int i = 0; i < cantidad; i++) {
         if (lista[i].codigo == codigoBuscado) {
-            return 1;
+            return i;
         }
     }
     return -1;
@@ -131,7 +131,7 @@ float calcularComision(float precio, int cantidad) {
 }
 
 
-bool guardarComanda(char nombreArchivo[], Comanda c) {
+bool guardarComanda(char nombreArchivo[], Comanda c) { // GENERA O REESCRIBE LA COMANDA 
     FILE* archivo = fopen(nombreArchivo, "ab");
     if (archivo == NULL) {
         cout << "Error al abrir " << nombreArchivo << endl;
@@ -143,7 +143,7 @@ bool guardarComanda(char nombreArchivo[], Comanda c) {
     return true;
 }
 
-bool actualizarInventario(int posicion, int nuevoStock) {
+bool actualizarInventario(int posicion, int nuevoStock) { // ACTUALIZA LOS PRODUCTOS DE "inventario.dat"
     FILE* archivo = fopen("inventario.dat", "r+b");
     if (archivo == NULL) {
         cout <<"Error al abrir inventario.dat" << endl;
@@ -167,7 +167,7 @@ bool actualizarInventario(int posicion, int nuevoStock) {
     return true;
 }
  
-void cargarVenta(Mozo listaMozos[], int cantidadMozos, Producto listaProductos[], int cantidadProductos, char nombreArchivo[]) {
+void cargarVenta(Mozo listaMozos[], int cantidadMozos, Producto listaProductos[], int cantidadProductos, char nombreArchivo[]) { // BUSCA, MUESTRA Y EDITA EL STOCK DE LOS PRODUCTOS PEDIDOS
     int posMozo = login(listaMozos, cantidadMozos);
     if (posMozo == -1) {
         cout << "Venta descartada." << endl;
@@ -220,6 +220,55 @@ void cargarVenta(Mozo listaMozos[], int cantidadMozos, Producto listaProductos[]
     cout << "Venta guardada. Comision: $" << c.comision << endl;
 }
 
+void ordenarMozo(Comanda lista[], int cantidad) {
+    for (int i = 0; i < cantidad - 1; i++) {
+        for (int j = 0; j < cantidad - 1 - i; j++) {
+            if (lista[j].idMozo > lista[j + 1].idMozo) {
+                Comanda aux = lista[j];
+                lista[j] = lista[j + 1];
+                lista[j + 1] = aux;
+            }
+        }
+    }
+}
+
+void ordenarPlanilla(char nombreArchivo[]) {
+    FILE* archivo = fopen(nombreArchivo, "rb");
+    if (archivo == NULL) {
+        cout << "No hay ventas para ordenar en la planilla." << endl;
+        return;
+    }
+
+    Comanda lista[MAX_COMANDAS];
+    int cantidad = 0;
+
+    while (cantidad < MAX_COMANDAS && fread(&lista[cantidad], sizeof(Comanda), 1, archivo) == 1) {
+        cantidad++;
+    }
+
+    Comanda sobrante;
+    if (cantidad == MAX_COMANDAS && fread(&sobrante, sizeof(Comanda), 1, archivo) == 1) {
+        cout << "La planilla tiene demasiadas ventas para ordenarla. No se modifico el archivo." << endl;
+        fclose(archivo);
+        return;
+    }
+    fclose(archivo);
+ 
+    ordenarMozo(lista, cantidad);
+ 
+    archivo = fopen(nombreArchivo, "wb");
+    if (archivo == NULL) {
+        cout << "Error al reescribir " << nombreArchivo << endl;
+        return;
+    }
+    for (int i = 0; i < cantidad; i++) {
+        fwrite(&lista[i], sizeof(Comanda), 1, archivo);
+    }
+    fclose(archivo);
+ 
+    cout << "Planilla ordenada (" << cantidad << " ventas)." << endl;
+}
+
 int main () {
     Mozo listaMozos[MAX_MOZOS];
     Producto listaProductos[MAX_PRODUCTOS];
@@ -239,10 +288,10 @@ int main () {
     int posMozo = login(listaMozos, cantidadMozos);
     if (posMozo == -1) {
         cout << "Error al iniciar sesion." << endl;
-    } else {
-        cout << "Bienvenido, " << listaMozos[posMozo].nombre << endl;
-    }
- 
+        posMozo = login(listaMozos, cantidadMozos);
+    } 
+    cout << "Bienvenido, " << listaMozos[posMozo].nombre << endl;
+
     char fecha[11];
 
     cout << "Ingrese la fecha de hoy (DD-MM-AAAA)" << endl;
@@ -276,5 +325,10 @@ int main () {
             cout << "Opcion invalida." << endl;
         }
     }
+
+    ordenarPlanilla(nombreArchivo);
+
+    cout << "Carga terminada." << endl;
+    
     return 0;  
 }
