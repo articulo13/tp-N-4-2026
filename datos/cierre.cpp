@@ -87,5 +87,17 @@ fclose(archivo);
 //____________________________________________________________PLANILLA DE LOS MOZOS______________________________________________________________
 cout << left << setw(12) << "FECHA" << setw(20) << "MOZO" << setw(10) << "CODPROD" << setw(10) << "CANTIDAD" << setw(10) << "COMISION" << "\n"; 
 
-
+for (int m = 0; m < totalmozos; m++) {
+        for (int col = 0; col < (int)matriz[m].size(); col++) {
+            comanda c = matriz[m][col];
+            cout << left << setw(12) << c.fecha
+                 << setw(20) << c.mozo
+                 << setw(10) << c.codprod
+                 << setw(10) << c.cantidad
+                 << fixed << setprecision(2) << setw(10) << c.comision
+                 << "\n";
+        }
+    }
+ 
+    return 0;
 }
