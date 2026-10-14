@@ -43,6 +43,7 @@ struct Comanda {  // creamos el struct para poder leer y escribir las ventas del
 void CalcularRegistros(const char* nombre, int& x); 
 void CrearArchiAux(const char* nombre);
 void OrdenarArchivo(const char* nombre,int x);
+void IncripitarClave(mozo& m);
 void CorteDeControlArchivo();  //Corte de control con el archivo auxiliar  para generar el  archivo "Mozos.dat"
 // PLANILLAS Y STOCK 
 long busquedabinaria(const char* nombre, int codigo, Producto& r); //busqueda binaria para encontrar el stock (mediante las casillas fisicas)
@@ -266,6 +267,8 @@ void CorteDeControlArchivo(){
 		fwrite(&m,sizeof(mozo),1,b);      //Guardamos los datos de ese mozo en el archivo y avanzamos una posicion en el archivo.
 		
 		
+		
+		cout<<m.nombre<<" "<<m.id<<" "<<m.password<<" "<<m.TotalComision<<" "<<endl;
 		
 	}
 	
