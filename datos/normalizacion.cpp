@@ -55,7 +55,7 @@ void ordenarPlanillaDia(const char* nombreArchivo);
 //MAIN -----------------------------------------------------------------------------------------------
 int main(){
 	
-	int cantidad_registros;
+	int cantidad_registros=0;
 	const char nombre[] = "comandas_historicas.dat";
 	
 	
@@ -72,14 +72,15 @@ int main(){
 	
 	
 	
+	
 
 	return 0;
 }
 
 //DESARROLLLO DE FUNCIONES-----------------------------------------------------------------------------------------
-void CalcularRegistros(const char* nombre, int& x){
+void CalcularRegistros(const char* nombre, int& x){ 
 	
-	FILE*f = fopen(nombre,"rb");
+	FILE*f = fopen(nombre,"rb"); //abrimos el archivo en modo lectura binaria
 	
 	if(f ==NULL){
 		
@@ -87,18 +88,20 @@ void CalcularRegistros(const char* nombre, int& x){
 		return;
 	}
 	
-	fseek(f,0,SEEK_END);
+	fseek(f,0,SEEK_END);                 //nos posicionamos al final del archivo
 	
-   long y = ftell(f)/ sizeof(ComandaHistorica);
-	x=y;
+   long y = ftell(f)/ sizeof(ComandaHistorica);  //con ftell  obtenemos la cantidad de bytes del archivo 
+                                                //  con sizeof  obtenemos la cantidad de bytes de cada registro
+                                                //al dividirlo obtendremos la cantidad de registros del archivo
+	x=y;  
 	fclose(f);
 }
 void CrearArchiAux(const  char* nombre){
 	
 	ComandaHistorica m;
 	
-	FILE*a = fopen(nombre,"rb");
-	FILE*b = fopen("auxiliar.dat","wb");
+	FILE*a = fopen(nombre,"rb");    //abrimos el archivo en lectura binaria
+	FILE*b = fopen("auxiliar.dat","wb");   //abrimos el archivo en escritura binaria
 	
 	if(a == NULL ){
 		cout<<"No se pudo abrir el archivo"<<endl;
@@ -110,9 +113,9 @@ void CrearArchiAux(const  char* nombre){
 		return;
 	}
 	
-	while(fread(&m,sizeof(ComandaHistorica),1,a)==1){
+	while(fread(&m,sizeof(ComandaHistorica),1,a)==1){     //usamos fread para que mientra el archivo "a" siga teniendo registros el bucle seguira dando vueltas
 		
-		fwrite(&m,sizeof(ComandaHistorica),1,b);
+		fwrite(&m,sizeof(ComandaHistorica),1,b);        //En cada vuelta mandamos los datos del respectivo registro del archivo "a" hacia el archivo "b"
 	}
 	
 	fclose(a);
@@ -121,7 +124,7 @@ void CrearArchiAux(const  char* nombre){
 
 void OrdenarArchivo(const char* nombre,int x){
 	
-	FILE*a = fopen(nombre,"rb+"); //abrimos el archivo  en modo lectura y escribir
+	FILE*a = fopen(nombre,"rb+"); //abrimos el archivo  en modo lectura y escritura
 	
 	if(a == NULL){
 		
@@ -129,44 +132,55 @@ void OrdenarArchivo(const char* nombre,int x){
 		return;
 	}
 	
-	ComandaHistorica  m,n; //declaramos variables
+	ComandaHistorica  m,n,C; //declaramos variables
 	
+	
+	//Odenamos por nombre
 	
 	for(int i=0;i<x-1;i++){
-			int pos=i;    //asumimos al primero en cada vuelta del primer for como el minimo
+			int pos=i;    //asumimos al primer registro  desordenado en cada vuelta del primer for como la posicion del minimo
 			
-		fread(&m,sizeof(ComandaHistorica),1,a); //el puntero avanza un lugar y guarda en la variable m el primer registro
+		fread(&m,sizeof(ComandaHistorica),1,a); //avanzamos una posicion  y guardamos  la variable m el primer registro
 		
 		char minimo[50];
 		strcpy(minimo,m.nombreMozo);  //copiamos en minimo el contenido del segundo parametro
         
 		for(int j=i+1;j<x;j++){
-			fread(&m,sizeof(ComandaHistorica),1,a); //el puntero avanza un lugar mas  y guarda en m otro valor, lo que nos permite ir comparando los nombres
-			if(strcmp(minimo,m.nombreMozo)>0){ 
+			fread(&m,sizeof(ComandaHistorica),1,a); //avanzamos una posicion mas  y guardamos  en m otro valor, lo que nos permite ir comparando los nombres
+			if(strcmp(minimo,m.nombreMozo)>0){     //Comparamos para ver si el valor del parametro 1 es menor que el del parametro 2
+			                                       //si el resultado de esa comparacion nos da que es mayor a 1 entonces el paramametro 1 es mayor que el parametro 2
 				
-			    strcpy(minimo,m.nombreMozo);
-				pos=j;
+			    strcpy(minimo,m.nombreMozo);    //entonces reemplazamos el valor de minimo por el de la otra variable
+			                                 
+				pos=j;                          //guardamos la posicion del minimo
 			}
 		}
 		
-		fseek(a,pos*sizeof(ComandaHistorica),SEEK_SET); //el puntero se posiciona en el registro con  el menor valor 
-		fread(&m,sizeof(ComandaHistorica),1,a);      // guardamos el valor del dato de ese registro
+		if(pos!=i){    //Si la posicion del minimo resulta ser distinta que el valor de "i" entonces intercambiamos variables
+	
+		fseek(a,pos*sizeof(ComandaHistorica),SEEK_SET); // Nos posicionamos en el registro con  el menor valor
+		fread(&m,sizeof(ComandaHistorica),1,a);      // guardamos los datos del registro con menor valor
 		
-		fseek(a,i*sizeof(ComandaHistorica),SEEK_SET); //el puntero se posiciona en nuestro primer registro desordenado
-		fread(&n,sizeof(ComandaHistorica),1,a);   //guardamos el valor
+		fseek(a,i*sizeof(ComandaHistorica),SEEK_SET); //Nos posicionamos en  nuestro primer registro desordenado
+		fread(&n,sizeof(ComandaHistorica),1,a);   //guardamos los datos del registro
 		
 		
 		 //INTERCAMBIO DE VALORES
 		fseek(a,i*sizeof(ComandaHistorica),SEEK_SET);   //nos posicionamos en el primer registro desordenado
 		fwrite(&m,sizeof(ComandaHistorica),1,a);    //guardamos los datos del registro con el menor valor en el primer registro desordenado
 		
-	    fseek(a,pos*sizeof(ComandaHistorica),SEEK_SET);   //nos posicionamos en el lugar del registro con menor valor
+	    fseek(a,pos*sizeof(ComandaHistorica),SEEK_SET);   //nos posicionamos en la posicion del registro con menor valor
 	    fwrite(&n,sizeof(ComandaHistorica),1,a);         // guardamos los datos del registro desordenado en esa posicion
+		}
 		
-		fseek(a,(i+1)*sizeof(ComandaHistorica),SEEK_SET);  // como ya intercambiamos los valores, debemos cambiar la posicion del puntero hacai el siguiente registro no ordenado
+		fseek(a,(i+1)*sizeof(ComandaHistorica),SEEK_SET);  //como ya intercambiamos los valores, debemos posicionarnos en el siguiente registro  no ordenado
 		
-	}	
-
+		
+		
+	}
+		
+	
+	
     fclose(a); //cerramos  el archivo
 }
 
@@ -180,7 +194,7 @@ void IncripitarClave(mozo& m){
 		    cin.getline(m.password,20);
 			
 			
-			for(int i=0;m.password[i]!='\0';i++){        //verificamos ue la calve no  tenga espacios
+			for(int i=0;m.password[i]!='\0';i++){        //verificamos ue la clavee no  tenga espacios
 				
 				if(m.password[i]==' '){	
 					espacios++;
@@ -205,8 +219,8 @@ void CorteDeControlArchivo(){
 	ComandaHistorica ch;
 	mozo m;
 	
-	FILE* a= fopen("auxiliar.dat","rb");
-	FILE* b= fopen("mozos.dat","wb");
+	FILE* a= fopen("auxiliar.dat","rb"); //abrimos el archivo en modo lectura
+	FILE* b= fopen("mozos.dat","wb");    //abrimos el archivo en modo escritura, como no existe  se crea uno.
 	
 	if(a == NULL){
 		
@@ -219,39 +233,38 @@ void CorteDeControlArchivo(){
 		return;
 	}
 	
-	
-	int leido = fread(&ch,sizeof(ComandaHistorica),1,a);
+	 
+	int leido = fread(&ch,sizeof(ComandaHistorica),1,a);   
 	int contador_id=1;
-	
 	
 	while(leido==1){
 		
-		float cont_comision_mozo=0;
+		float cont_comision_mozo=0;   
 		char campo_clave[50];
-		strcpy(campo_clave, ch.nombreMozo);
+		strcpy(campo_clave, ch.nombreMozo); // elijimos ch.nombreMozo como campo clave  para realizar el corte de control
 		
-	    strcpy(m.nombre, ch.nombreMozo);
-		m.id=contador_id;
-		contador_id++;
+	    strcpy(m.nombre, ch.nombreMozo);       // guardamos el nombre del mozo
+		m.id=contador_id;                      //guardamos su id
+		contador_id++;                        //avanzamos uno  para el siguiente mozo
 		
 		//Incriptacion de Clave
-	
-	
+
 		IncripitarClave(m);
 		
 		
 		///
 		
-		while(leido==1 && strcmp(campo_clave, ch.nombreMozo) == 0){
+		while(leido==1 && strcmp(campo_clave, ch.nombreMozo) == 0){  //mientras ambos parametros  de strcmp sean iguales  y el archivo siga teniendo registros...
 			
-	        cont_comision_mozo=ch.comision+cont_comision_mozo;
+	        cont_comision_mozo=ch.comision+cont_comision_mozo; // Sumamos en cada vuelta donde el mozo siga siendo el mismo la comision de cada venta para obtener la comision total
 	        
-	        leido=fread(&ch,sizeof(ComandaHistorica),1,a);
+	        leido=fread(&ch,sizeof(ComandaHistorica),1,a);   
 			
 		}
-		m.TotalComision=cont_comision_mozo;
+		m.TotalComision=cont_comision_mozo; //guardamos la comision total
 		
-		fwrite(&m,sizeof(mozo),1,b);
+		fwrite(&m,sizeof(mozo),1,b);      //Guardamos los datos de ese mozo en el archivo y avanzamos una posicion en el archivo.
+		
 		
 		
 	}
@@ -260,7 +273,7 @@ void CorteDeControlArchivo(){
 
 	fclose(a);
 	fclose(b);
-	remove("auxiliar.dat");
+	remove("auxiliar.dat");  //removemos el archivo auxiliar
 	
 	
 }
