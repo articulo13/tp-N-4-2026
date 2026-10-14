@@ -142,6 +142,30 @@ bool guardarComanda(char nombreArchivo[], Comanda c) {
     fclose(archivo);
     return true;
 }
+
+bool actualizarInventario(int posicion, int nuevoStock) {
+    FILE* archivo = fopen("inventario.dat", "r+b");
+    if (archivo == NULL) {
+        cout <<"Error al abrir inventario.dat" << endl;
+        return false;
+    }
+
+    Producto p;
+
+    fseek(archivo, posicion * sizeof(Producto), SEEK_SET);
+    if (fread(&p, sizeof(Producto), 1, archivo) != 1) {
+        cout << "Error al leer el producto." << endl;
+        fclose(archivo);
+        return false;
+    }
+
+    p.stockActual = nuevoStock;
+
+    fseek(archivo, posicion * sizeof(Producto), SEEK_SET);
+    fwrite(&p, sizeof(Producto), 1, archivo);
+    fclose(archivo);
+    return true;
+}
  
 void cargarVenta(Mozo listaMozos[], int cantidadMozos, Producto listaProductos[], int cantidadProductos, char nombreArchivo[]) {
     int posMozo = login(listaMozos, cantidadMozos);
@@ -189,6 +213,9 @@ void cargarVenta(Mozo listaMozos[], int cantidadMozos, Producto listaProductos[]
     }
  
     listaProductos[posProducto].stockActual = listaProductos[posProducto].stockActual - cantidad;
+    if (!actualizarInventario(posProducto, listaProductos[posProducto].stockActual)) {
+        cout << "Aviso: No se pudo actualizar el stock en el inventario." << endl;
+    }
  
     cout << "Venta guardada. Comision: $" << c.comision << endl;
 }
