@@ -133,7 +133,7 @@ void OrdenarArchivo(const char* nombre,int x){
 		return;
 	}
 	
-	ComandaHistorica  m,n,C; //declaramos variables
+	ComandaHistorica  m,n; //declaramos variables
 	
 	
 	//Odenamos por nombre
@@ -268,7 +268,7 @@ void CorteDeControlArchivo(){
 		
 		
 		
-		cout<<m.nombre<<" "<<m.id<<" "<<m.password<<" "<<m.TotalComision<<" "<<endl;
+		
 		
 	}
 	
