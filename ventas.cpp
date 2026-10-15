@@ -132,7 +132,9 @@ float calcularComision(float precio, int cantidad) {
 
 
 bool guardarComanda(char nombreArchivo[], Comanda c) { // GENERA O REESCRIBE LA COMANDA 
-    FILE* archivo = fopen(nombreArchivo, "ab");
+    char ruta[256];
+    snprintf(ruta, sizeof(ruta), "datos/%s", nombreArchivo);
+    FILE* archivo = fopen(ruta, "ab");
     if (archivo == NULL) {
         cout << "Error al abrir " << nombreArchivo << endl;
         return false;
