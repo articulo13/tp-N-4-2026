@@ -23,32 +23,39 @@ struct comanda
 
 
 
-int main(){
-
-const char* nombresArchi[DIAS_SEMANA] = {
-"lunes.dat", "martes.dat", "miercoles.dat", "jueves.dat", "viernes.dat", "sabado.dat", "domingo.dat" 
-//Enumera y guarda cada archivo que entra, poniendo el lunes como 0 y domingo como 6 en el array DIAS_SEMANA.
-}; 
+int main(int argc, char* argv[]){
 
 comanda registros[MAX_REGISTROS]; 
 int totalregistros = 0; 
-
+ 
 int idmozos[MAX_MOZOS];  
 int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos al momento
                     //(no sabemos cuantos pueden llegar a venir).
-
+ 
 vector<comanda> matriz[MAX_MOZOS]; 
-
-
-//_______Lectura de los 7 archivos y ubicacion de los mozos_______
-for (int dia = 0; dia < DIAS_SEMANA; dia++)
+ 
+ 
+if (argc < 2)
 {
-   FILE* archivo =fopen(nombresArchi[dia], "rb");  //Abrimos en modo lectura para que lea los archvivos guardados.
-
+    cout << "No llegaron archivos para procesar." << endl;
+    return 1;
+}
+ 
+if (argc - 1 > DIAS_SEMANA)
+{
+    cout << "Llegaron " << argc - 1 << " archivos, solo se procesan los primeros " << DIAS_SEMANA << "." << endl;
+}
+ 
+//_______Lectura de los archivos que llegan (en orden de llegada) y ubicacion de los mozos_______
+//Se procesa cada archivo que llega, sin importar como se llame.
+for (int i = 1; i < argc && i <= DIAS_SEMANA; i++)
+{
+   FILE* archivo =fopen(argv[i], "rb");  //Abrimos en modo lectura el archivo que llego.
+ 
     if (archivo == NULL)
     {
-     cout << "No se pudo abrir el archivo: "<< nombresArchi[dia] << endl; 
-    continue; //sigue con el resto de dias si flata uno.
+     cout << "No se pudo abrir el archivo: "<< argv[i] << endl; 
+    continue; //sigue con el resto de archivos si falla uno.
     }
     
    comanda c; 
@@ -81,7 +88,7 @@ for (int dia = 0; dia < DIAS_SEMANA; dia++)
     //agrega la comanda al final del vector de ese mozo
     matriz[fmozo].push_back(c); 
 }
-
+ 
 fclose(archivo); 
 
 }
