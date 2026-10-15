@@ -6,12 +6,13 @@
 #include <iomanip>   // Necesario para setw y left
 
 using namespace std;
+
 //Defino los structs que voy a utilizar
 
 struct ComandaHistorica
   {
-  char  fecha[11];        // "DD-MM-AAAA"
-  char  nombreMozo[50];   // el nombre completo, repetido en cada venta
+  char  fecha[11];
+  char  nombreMozo[50];
   int   codigoProducto;
   int cantidad;
   float comision;
@@ -57,7 +58,7 @@ int main()
            return 0;
        }
 
-       //Ordenamiento del arreglo estático por nombreMozo
+       //Ordenamiento del arrego por nombreMozo Alfabeticamente. Uso Ordenamiento Burbuja
        for (int i = 0; i < totalregistros - 1; i++)
        {
            for (int j = 0; j < totalregistros - i - 1; j++)
@@ -72,10 +73,8 @@ int main()
        }
 
        // Corte de Control
-       cout << left << setw(25) << "MOZO"
-            << setw(18) << "PROD. VENDIDOS"
-            << setw(15) << "COMISION TOTAL" << "\n";
-       cout << "------------------------------------------------------------" << endl;
+       cout << "MOZO | PROD. VENDIDOS | COMISION TOTAL" << endl;
+               cout << " ---------------------------------------- " << endl;
 
        int i = 0;
        float totalGeneralBuffet = 0;
