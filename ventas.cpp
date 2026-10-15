@@ -286,7 +286,7 @@ int main () {
     cout << "Se cargaron: " << cantidadMozos << " Mozos y " << cantidadProductos << " Productos." << endl;
 
     int posMozo = login(listaMozos, cantidadMozos);
-    if (posMozo == -1) {
+    while (posMozo == -1) {
         cout << "Error al iniciar sesion." << endl;
         posMozo = login(listaMozos, cantidadMozos);
     } 
