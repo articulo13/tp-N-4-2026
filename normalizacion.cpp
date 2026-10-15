@@ -365,6 +365,10 @@ void generarPlanillasPorDia() {
 
     ComandaHistorica ch;
 
+	// LÍNEAS AGREGADAS: Arreglo para registrar las fechas encontradas y ordenarlas al final[cite: 1]
+    char fechasEncontradas[50][11]; 
+    int cantFechas = 0;
+
     // 2. Recorremos todas las comandas históricas
     while (fread(&ch, sizeof(ComandaHistorica), 1, fHist) == 1) {
         
@@ -384,6 +388,19 @@ void generarPlanillasPorDia() {
             char nombreArchivoDia[60];
             sprintf(nombreArchivoDia, "datos/comandas_%s.dat", ch.fecha);
 
+			// LÍNEAS AGREGADAS: Verificamos si es una fecha nueva para agregarla a la lista[cite: 1]
+            bool yaEstaEnLista = false;
+            for (int i = 0; i < cantFechas; i++) {
+                if (strcmp(fechasEncontradas[i], ch.fecha) == 0) {
+                    yaEstaEnLista = true;
+                    break;
+                }
+            }
+            if (!yaEstaEnLista && cantFechas < 50) {
+                strcpy(fechasEncontradas[cantFechas], ch.fecha);
+                cantFechas++;
+            }
+
             // 6. Abrimos (o creamos) el archivo de esa fecha y agregamos la venta al final
             FILE* fDia = fopen(nombreArchivoDia, "ab");
             if (fDia != NULL) {
@@ -394,6 +411,14 @@ void generarPlanillasPorDia() {
     }
 
     fclose(fHist);
+
+	// LÍNEAS AGREGADAS: ACÁ SE LLAMA A ORDENAR: Recorremos las fechas y ordenamos cada planilla[cite: 1]
+    for (int i = 0; i < cantFechas; i++) {
+        char nombreArchivo[60];
+        sprintf(nombreArchivo, "comandas_%s.dat", fechasEncontradas[i]);
+        ordenarPlanillaDia(nombreArchivo); 
+    }
+	
 }
 
 void ordenarPlanillaDia(const char* nombreArchivo) {
