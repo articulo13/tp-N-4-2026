@@ -134,8 +134,10 @@ if (archivo == NULL)
     fclose(archivo);
 
 
-}
+
 //____________________________________________________________PLANILLA DE LOS MOZOS______________________________________________________________
+
+
 
 
 cout << left << setw(12) << "MOZO" << setw(10) << "CODPROD" << setw(10) << "CANTIDAD" << setw(10) << "COMISION" << "\n"; 
@@ -183,4 +185,5 @@ for (int m = 0; m < totalmozos; m++) {
 fclose(salida);
  
     return 0;
+
 }
