@@ -165,7 +165,7 @@ cout << "Numero de mes: ";
 cin >> mes;
 cout << "Numero de semana: ";
 cin >> semana;
-string nombre = "comandas_semana_S" + to_string(semana) + "_" + to_string( mes); 
+string nombre = "datos/comandas_semana_S" + to_string(semana) + "_" + to_string( mes); 
 
 
 FILE* salida = fopen(nombre.c_str(), "wb");  //Abrimos en modo escritura binaria para crear el archivo.
