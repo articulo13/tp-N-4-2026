@@ -57,7 +57,7 @@ void ordenarPlanillaDia(const char* nombreArchivo);
 int main(){
 	
 	int cantidad_registros=0;
-	const char nombre[] = "comandas_historicas.dat";
+	const char nombre[] = "datos/comandas_historicas.dat";
 	
 	
 	//funciones
@@ -204,7 +204,7 @@ void IncripitarClave(mozo& m){
       
       //Sumamos 4 caracteres a cada uno de los caracteres de la clave para incriptarlo
       for(int i=0; m.password[i] != '\0';i++){
-      	m.password[i]=m.password[i]+4;
+      	m.password[i]=m.password[i]+5;
       }
 
 }
@@ -305,8 +305,8 @@ long busquedabinaria(const char* nombre, int codigo, Producto& r){ //busqieda de
 }
 
 void actualizarStock(){ // se actualiza el numero de stock del producto
-	FILE* fCom = fopen("comandas_historicas.dat", "rb");
-	FILE* fInv = fopen("inventario.dat", "rb+");
+	FILE* fCom = fopen("datos/comandas_historicas.dat", "rb");
+	FILE* fInv = fopen("datos/inventario.dat", "rb+");
 	if (fCom == NULL || fInv == NULL) {
 		cout << "Niguno de los archivos se puso abrir"<< endl;
 		if (fCom != NULL) fclose(fCom);
@@ -317,7 +317,7 @@ void actualizarStock(){ // se actualiza el numero de stock del producto
 	ComandaHistorica comanda;
 	Producto prod;
 	while (fread(&comanda, sizeof(ComandaHistorica), 1, fCom) == 1){ // bucle de lectura
-		long pos = busquedabinaria( "inventario.dat", comanda.codProd, prod);
+		long pos = busquedabinaria( "datos/inventario.dat", comanda.codProd, prod);
 			if (pos != -1){
 			prod.stockActual -= comanda.cantidad;
 			fseek(fInv, pos * sizeof(Producto), SEEK_SET); // descuenta del archivo inventario
@@ -356,7 +356,7 @@ int obtenerIdMozo(const char* nombreBuscado) { //funcion axiliar para las planil
 
 void generarPlanillasPorDia() {
     // 1. Abrimos el archivo de ventas históricas
-    FILE* fHist = fopen("comandas_historicas.dat", "rb");
+    FILE* fHist = fopen("datos/comandas_historicas.dat", "rb");
     
     if (fHist == NULL) {
         cout << "Error: No se pudo abrir comandas_historicas.dat" << endl;
@@ -382,7 +382,7 @@ void generarPlanillasPorDia() {
 
             // 5. Armamos el nombre del archivo con la fecha del registro (ej: "comandas_03-06-2025.dat")
             char nombreArchivoDia[60];
-            sprintf(nombreArchivoDia, "comandas_%s.dat", ch.fecha);
+            sprintf(nombreArchivoDia, "datos/comandas_%s.dat", ch.fecha);
 
             // 6. Abrimos (o creamos) el archivo de esa fecha y agregamos la venta al final
             FILE* fDia = fopen(nombreArchivoDia, "ab");

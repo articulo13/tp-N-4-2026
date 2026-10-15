@@ -49,7 +49,7 @@ int cargarMozo(Mozo lista[]) { // CARGAR LOS MOZOS de "mozos.dat"
 }
 
 int cargarProducto(Producto lista[]) { // CARGAR LOS PRODUCTOS DE "inventario.dat"
-    FILE* archivoProducto = fopen("inventario.dat", "rb");
+    FILE* archivoProducto = fopen("datos/inventario.dat", "rb");
     if(archivoProducto == NULL) {
         cout << "Error al abrir inventario.dat" << endl;
         return -1;
@@ -144,7 +144,7 @@ bool guardarComanda(char nombreArchivo[], Comanda c) { // GENERA O REESCRIBE LA 
 }
 
 bool actualizarInventario(int posicion, int nuevoStock) { // ACTUALIZA LOS PRODUCTOS DE "inventario.dat"
-    FILE* archivo = fopen("inventario.dat", "r+b");
+    FILE* archivo = fopen("datos/inventario.dat", "r+b");
     if (archivo == NULL) {
         cout <<"Error al abrir inventario.dat" << endl;
         return false;
