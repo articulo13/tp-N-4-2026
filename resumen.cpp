@@ -24,21 +24,37 @@ const int MAX_REGISTROS = 1000;
 
 int main()
 {
+   string semana, rutaArchivo;
+       FILE* archivo = NULL;
+       bool prueba1 = false;
 
-   const char* rutaArchivo = "datos/comandas_semana_s1-05.dat";
-
-       //Abro archivo binario
-       FILE* archivo = fopen(rutaArchivo, "rb");
-
-       if (archivo == NULL)
+       // Ciclo de validación para pedir la semana y armar la ruta dinámicamente
+       while (prueba1 == false)
        {
-           cout << "No se pudo abrir el archivo: " << rutaArchivo << endl;
-           return 1;
+           cout << "Ingrese la semana (ej: s1-05): ";
+           cin >> semana;
+
+           // Armamos el nombre del archivo concatenando el texto fijo con la variable ingresada
+           // Si lo guardas dentro de una carpeta "datos/", déjalo como "datos/comandas_semana_" + semana + ".dat"
+           rutaArchivo = "comandas_semana_" + semana + ".dat";
+
+           // Abrimos el archivo en modo lectura binaria
+           archivo = fopen(rutaArchivo.c_str(), "rb");
+
+           if (archivo == NULL)
+           {
+               cout << "¡El archivo no existe o la ruta es incorrecta! Asegúrese de escribir bien el código (ej: s1-05).\n" << endl;
+           } else
+           {
+               cout << "¡Carga completa!\n" << endl;
+               prueba1 = true;
+           }
        }
 
        ComandaHistorica registros[MAX_REGISTROS];
        int totalregistros = 0;
        ComandaHistorica c;
+
 
        //Lectura anticipada
        int leido = fread(&c, sizeof(ComandaHistorica), 1, archivo);
@@ -87,14 +103,16 @@ int main()
            int totalProductosGrupo = 0;
            float totalComisionGrupo = 0;
 
-           // Subciclo de acumulación al producirse el corte
+           // Subciclo de acumulación al producirse el corte. evalua que no se pase del tamaño del arreglo y luego verifica que estemos hablando del mozo
            while (i < totalregistros && strcmp(registros[i].nombreMozo, mozoActual) == 0)
            {
                totalProductosGrupo = totalProductosGrupo+registros[i].cantidad;
+
                totalComisionGrupo = totalComisionGrupo + registros[i].comision;
 
                i++;
            }
+
            cout << mozoActual << " | " << totalProductosGrupo << " | $ " << totalComisionGrupo << "\n";//truco de IA porque no me funcionaba el endl debido a mezcla de datos
 
            totalGeneralBuffet += totalComisionGrupo;
