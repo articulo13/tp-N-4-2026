@@ -100,5 +100,24 @@ for (int m = 0; m < totalmozos; m++) {
         }
     }
  
+
+//________________________________________________CREACION DE ARCHIVO _______________________________________
+//Guarda la misma planilla de arriba, con todas las comandas agrupadas por mozo.
+FILE* salida = fopen("planilla_semanal.dat", "wb");  //Abrimos en modo escritura binaria para crear el archivo.
+ 
+if (salida == NULL)
+{
+    cout << "No se pudo crear el archivo de la planilla." << endl;
+    return 1;
+}
+ 
+for (int m = 0; m < totalmozos; m++) {
+    for (int col = 0; col < (int)matriz[m].size(); col++) {
+        fwrite(&matriz[m][col], sizeof(comanda), 1, salida);  //escribe una comanda por vez, en el mismo orden de la planilla.
+    }
+}
+ 
+fclose(salida);
+ 
     return 0;
 }
