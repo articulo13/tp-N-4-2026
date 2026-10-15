@@ -14,9 +14,10 @@ struct comanda
 {
     char fecha[11]; //dd/mm/aa
     char mozo[53]; //Nombre Apellido
+    int idmozo; //id del mozo 
     int codprod; //num de 3 digitos 
     int cantidad;//cantidad de comandas
-    int comision; //cantidad ganada
+    float comision; //cantidad ganada
 };
 
 
@@ -32,7 +33,7 @@ const char* nombresArchi[DIAS_SEMANA] = {
 comanda registros[MAX_REGISTROS]; 
 int totalregistros = 0; 
 
-char mozos[MAX_MOZOS][53]; 
+int idmozos[MAX_MOZOS];  
 int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos al momento
                     //(no sabemos cuantos pueden llegar a venir).
 
@@ -61,7 +62,7 @@ for (int dia = 0; dia < DIAS_SEMANA; dia++)
     int fmozo = -1; 
     for (int j = 0; j < totalmozos; j++)
     {
-       if (strcmp(mozos[j], c.mozo)== 0)
+       if ((idmozos[j] == c.idmozo))
        {
         fmozo = j; 
         break; 
@@ -72,7 +73,7 @@ for (int dia = 0; dia < DIAS_SEMANA; dia++)
     //Agrega a los que nuevos (los que no aparecieron anteriormente).
     if (fmozo == -1)
     {
-        strcpy(mozos[totalmozos], c.mozo);
+        idmozos[totalmozos] = c.idmozo;
         fmozo = totalmozos; 
         totalmozos++; 
     }
