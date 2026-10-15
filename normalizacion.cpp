@@ -190,7 +190,7 @@ void IncripitarClave(mozo& m){
 	int posicion=0;
 	
 		//Usaremos los primeros 4 letras de los nombres de los mozos como clave inicial 
-		for(int i=0; m.nombre[i]!= '\0' && posicion<4;i++){   
+		for(int i=0; m.nombre[i]!= '\0' && posicion<5;i++){   
 			
 			if(m.nombre[i] != ' '){   //Si el elemento es distinto de espacio entonces copiaremos ese elemento hacia la variable m.password para formar una clave 
 				

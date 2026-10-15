@@ -35,7 +35,7 @@ int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos a
 vector<comanda> matriz[MAX_MOZOS]; 
  
  
-if (argc < 2)
+if (argc < 0)
 {
     cout << "No llegaron archivos para procesar." << endl;
     return 1;
