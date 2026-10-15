@@ -59,7 +59,7 @@ if (dia < 1 || dia > 31 ||
 }
 
 // Crear automaticamente el nombre del archivo
-string nombrearchivo = "comandas_"
+string nombrearchivo = "datos/comandas_"
                        + to_string(dia) + "-"
                        + to_string(mesArchivo) + "-"
                        + to_string(anio) + ".dat";
