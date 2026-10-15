@@ -1,4 +1,4 @@
-//Commit de prueba
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -16,7 +16,8 @@ struct ComandaHistorica
   int cantidad;
   float comision;
   };
-//
+
+//constante
 const int MAX_REGISTROS = 1000;
 
 
@@ -25,10 +26,11 @@ int main()
 
    const char* rutaArchivo = "datos/comandas_semana_s1-05.dat";
 
-       // 1. Apertura del archivo binario en modo lectura ("rb")
+       //Abro archivo binario
        FILE* archivo = fopen(rutaArchivo, "rb");
 
-       if (archivo == NULL) {
+       if (archivo == NULL)
+       {
            cout << "No se pudo abrir el archivo: " << rutaArchivo << endl;
            return 1;
        }
@@ -37,26 +39,31 @@ int main()
        int totalregistros = 0;
        ComandaHistorica c;
 
-       // 2. Lectura anticipada (Patrón obligatorio de la cátedra)
+       //Lectura anticipada
        int leido = fread(&c, sizeof(ComandaHistorica), 1, archivo);
 
-       while (leido == 1 && totalregistros < MAX_REGISTROS) {
+       while (leido == 1 && totalregistros < MAX_REGISTROS)
+       {
            registros[totalregistros] = c;
            totalregistros++;
            leido = fread(&c, sizeof(ComandaHistorica), 1, archivo);
        }
 
-       fclose(archivo); // Cerrar siempre el archivo
+       fclose(archivo); // cerrar archivo
 
-       if (totalregistros == 0) {
+       if (totalregistros == 0)
+       {
            cout << "El archivo está vacío o no se pudieron leer registros." << endl;
            return 0;
        }
 
-       // 3. Ordenamiento en memoria (RAM) del arreglo estático por nombreMozo
-       for (int i = 0; i < totalregistros - 1; i++) {
-           for (int j = 0; j < totalregistros - i - 1; j++) {
-               if (strcmp(registros[j].nombreMozo, registros[j + 1].nombreMozo) > 0) {
+       //Ordenamiento del arreglo estático por nombreMozo
+       for (int i = 0; i < totalregistros - 1; i++)
+       {
+           for (int j = 0; j < totalregistros - i - 1; j++)
+           {
+               if (strcmp(registros[j].nombreMozo, registros[j + 1].nombreMozo) > 0)
+               {
                    ComandaHistorica aux = registros[j];
                    registros[j] = registros[j + 1];
                    registros[j + 1] = aux;
@@ -64,7 +71,7 @@ int main()
            }
        }
 
-       // 4. Patrón de Corte de Control
+       // Corte de Control
        cout << left << setw(25) << "MOZO"
             << setw(18) << "PROD. VENDIDOS"
             << setw(15) << "COMISION TOTAL" << "\n";
@@ -73,7 +80,8 @@ int main()
        int i = 0;
        float totalGeneralBuffet = 0;
 
-       while (i < totalregistros) {
+       while (i < totalregistros)
+       {
            char mozoActual[50];
            strcpy(mozoActual, registros[i].nombreMozo);
 
@@ -81,17 +89,19 @@ int main()
            float totalComisionGrupo = 0;
 
            // Subciclo de acumulación al producirse el corte
-           while (i < totalregistros && strcmp(registros[i].nombreMozo, mozoActual) == 0) {
-               totalProductosGrupo += registros[i].cantidad;
-               totalComisionGrupo += registros[i].comision;
+           while (i < totalregistros && strcmp(registros[i].nombreMozo, mozoActual) == 0)
+           {
+               totalProductosGrupo = totalProductosGrupo+registros[i].cantidad;
+               totalComisionGrupo = totalComisionGrupo + registros[i].comision;
+
                i++;
            }
-           cout << mozoActual << " | " << totalProductosGrupo << " | $ " << totalComisionGrupo << "\n";
+           cout << mozoActual << " | " << totalProductosGrupo << " | $ " << totalComisionGrupo << "\n";//truco de IA porque no me funcionaba el endl debido a mezcla de datos
 
            totalGeneralBuffet += totalComisionGrupo;
        }
 
-       cout << "------------------------------------------------------------" << endl;
+       cout << "------------------------------------------------------------" << endl; // para la estetica use IA
        cout << "Total general del buffet: $" << fixed << setprecision(2) << totalGeneralBuffet << endl;
 
 
