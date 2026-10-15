@@ -187,29 +187,25 @@ void OrdenarArchivo(const char* nombre,int x){
 
 void IncripitarClave(mozo& m){
 	
-	int espacios;
-		
-		do{	
-		    espacios=0;
-			cout<<"Ingrese una clave para el MOZO con la ID "<<m.id<<" (la clave debe ser sin espacios): "<<endl; //pedimos al usuario que ingrese una clave
-		    cin.getline(m.password,20);
+	int posicion=0;
+	
+		//Usaremos los primeros 4 letras de los nombres de los mozos como clave inicial 
+		for(int i=0; m.nombre[i]!= '\0' && posicion<4;i++){   
 			
-			
-			for(int i=0;m.password[i]!='\0';i++){        //verificamos ue la clavee no  tenga espacios
+			if(m.nombre[i] != ' '){   //Si el elemento es distinto de espacio entonces copiaremos ese elemento hacia la variable m.password para formar una clave 
 				
-				if(m.password[i]==' '){	
-					espacios++;
-					cout<<"\nLa clave no debe tener  espacios"<<endl<<endl;
-					break;
-				}
-				
-			}
-		}while(espacios>0);
-		
-		for(int j=0; m.password[j]!='\0';j++){    //realizamos la encriptacion de la clave, para que no se guarde tal cual en  el archivo mozos.dat
-			
-			m.password[j]=m.password[j]+3;
-		};
+				m.password[posicion]=m.nombre[i];
+				posicion++;
+			}	
+		}
+
+      m.password[posicion]= '\0';
+      
+      
+      //Sumamos 4 caracteres a cada uno de los caracteres de la clave para incriptarlo
+      for(int i=0; m.password[i] != '\0';i++){
+      	m.password[i]=m.password[i]+4;
+      }
 
 }
 
@@ -265,9 +261,6 @@ void CorteDeControlArchivo(){
 		m.TotalComision=cont_comision_mozo; //guardamos la comision total
 		
 		fwrite(&m,sizeof(mozo),1,b);      //Guardamos los datos de ese mozo en el archivo y avanzamos una posicion en el archivo.
-		
-		
-		
 		
 		
 	}
