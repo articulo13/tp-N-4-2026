@@ -21,7 +21,8 @@ struct comanda
 
 
 
-int main(int argc, char* argv[]){
+int main(){//En nuestras computadoras no funciono de manera automatica, 
+                                //ingresen el archivo a utilizar de manera manual en la terminal 
 
 comanda registros[MAX_REGISTROS]; 
 int totalregistros = 0; 
@@ -32,64 +33,106 @@ int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos a
  
 vector<comanda> matriz[MAX_MOZOS]; 
  
- 
+    // ---------------------------------------------------------
+    // INGRESO DEL NOMBRE DEL ARCHIVO
+    // ---------------------------------------------------------
 
 
-    if (argc < 2)
+  int dia, mesArchivo, anio;
+
+cout << "Ingrese el dia: ";
+cin >> dia;
+
+cout << "Ingrese el mes: ";
+cin >> mesArchivo;
+
+cout << "Ingrese el anio: ";
+cin >> anio;
+
+// Verificar que los valores sean validos
+if (dia < 1 || dia > 31 ||
+    mesArchivo < 1 || mesArchivo > 12 ||
+    anio < 1)
 {
-    cout << "No llegaron archivos para procesar." << endl;
+    cout << "La fecha ingresada no es valida." << endl;
     return 1;
 }
- 
-    if (argc - 1 > DIAS_SEMANA)
+
+// Crear automaticamente el nombre del archivo
+string nombrearchivo = "comandas_"
+                       + to_string(dia) + "-"
+                       + to_string(mesArchivo) + "-"
+                       + to_string(anio) + ".dat";
+
+cout << "\nAbriendo archivo: "
+     << nombrearchivo << endl;
+
+FILE* archivo = fopen(nombrearchivo.c_str(), "rb");
+
+if (archivo == NULL)
 {
-        cout << "Llegaron " << argc - 1 << " archivos, solo se procesan los primeros " << DIAS_SEMANA << "." << endl;
+    cout << "No se pudo abrir el archivo: "
+         << nombrearchivo << endl;
+    cout << "Verifique que exista en la carpeta de trabajo."
+         << endl;
+    return 1;
 }
- 
-//_______Lectura de los archivos que llegan (en orden de llegada) y ubicacion de los mozos_______
-//Se procesa cada archivo que llega, sin importar como se llame.
-    for (int i = 1; i < argc && i <= DIAS_SEMANA; i++)
-{
-    FILE* archivo =fopen(argv[i], "rb");  //Abrimos en modo lectura el archivo que llego.
- 
-    if (archivo == NULL)
+   // ---------------------------------------------------------
+    // LECTURA DEL ARCHIVO Y UBICACION DE LOS MOZOS
+    // ---------------------------------------------------------
+
+    comanda c;
+    bool limiteAlcanzado = false;
+
+    while (fread(&c, sizeof(comanda), 1, archivo) == 1)
     {
-        cout << "No se pudo abrir el archivo: "<< argv[i] << endl; 
-        continue; //sigue con el resto de archivos si falla uno.
+        // Evitar superar el limite de registros
+        if (totalregistros >= MAX_REGISTROS)
+        {
+            cout << "Se alcanzo el limite de "
+                 << MAX_REGISTROS << " registros." << endl;
+            limiteAlcanzado = true;
+            break;
+        }
+
+        // Buscar si el mozo ya fue registrado
+        int fmozo = -1;
+
+        for (int j = 0; j < totalmozos; j++)
+        {
+            if (idmozos[j] == c.idmozo)
+            {
+                fmozo = j;
+                break;
+            }
+        }
+
+        // Agregar el mozo si es nuevo
+        if (fmozo == -1)
+        {
+            if (totalmozos >= MAX_MOZOS)
+            {
+                cout << "Se alcanzo el limite de "
+                     << MAX_MOZOS << " mozos." << endl;
+                limiteAlcanzado = true;
+                break;
+            }
+
+            idmozos[totalmozos] = c.idmozo;
+            fmozo = totalmozos;
+            totalmozos++;
+        }
+
+        // Guardar el registro
+        registros[totalregistros] = c;
+        totalregistros++;
+
+        // Agregar la comanda al vector de ese mozo
+        matriz[fmozo].push_back(c);
     }
-    
-   comanda c; 
-    while (fread(&c, sizeof(comanda),1, archivo) ==1) 
-{
-    //Guarda el registro.
-    registros[totalregistros] = c;
-    totalregistros++; 
-    
-    //Empieza a almacenar los que se repiten.
-    int fmozo = -1; 
-    for (int j = 0; j < totalmozos; j++)
-    {
-       if ((idmozos[j] == c.idmozo))
-       {
-            fmozo = j; 
-            break; 
-       }
-       
-    }
-    
-    //Agrega a los que nuevos (los que no aparecieron anteriormente).
-    if (fmozo == -1)
-    {
-        idmozos[totalmozos] = c.idmozo;
-        fmozo = totalmozos; 
-        totalmozos++; 
-    }
-    
-    //agrega la comanda al final del vector de ese mozo
-    matriz[fmozo].push_back(c); 
-}
- 
-fclose(archivo); 
+
+    fclose(archivo);
+
 
 }
 //____________________________________________________________PLANILLA DE LOS MOZOS______________________________________________________________
