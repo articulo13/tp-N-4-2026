@@ -84,3 +84,17 @@ en texto legible. Si tu programa imprime otra cosa al leerlos, revisá los `stru
 - **Commits repartidos:** cada integrante tiene que tener commits propios a lo
   largo del trabajo. El historial es parte de lo que se mira para la defensa
   individual (no vale un único commit final ni que suba todo una sola persona).
+
+### 🛠️ Decisiones de diseño y resolución de partes clave
+
+#### Normalización (`normalizacion.cpp`)
+
+* **Responsables:** 
+  * Alexander Catari Alarcón (`acatarialarcon-ship-it`): Creación del archivo auxiliar, ordenamiento, corte de control para extraer mozos únicos, solicitud de contraseñas y cifrado de claves.
+  * Kevin Axel Saldaña Medrano  (`[articulo13]`): Actualización de stock con búsqueda binaria, generación dinámica de planillas por fecha y ordenamiento insitu en disco por `idMozo`.
+
+* **Resolución de partes clave:**
+ * **Actualización de stock:** Para poder lograr la actualizacion de stock, primero tuve que entender que el archivo de inventario (la migracion de datos) estaba ordenado por código pero tenian saltos de codigo. Asi que primero tuve que usar un el patron algoritmico de busqueda de archivo binario para poder y de ahi usar esta funcion para poder actualizar el stock.
+ * **Obtener id del mozo:** Se recorre el archivo `mozos.dat` comparando el nombre en texto del mozo hasta encontrar la coincidencia y retornar su `idMozo` correspondiente.
+ 1. **Generación:** Se lee `comandas_historicas.dat` de forma secuencial y se van guardando las comandas en sus respectivos archivos diarios (`comandas_DD-MM-AAAA.dat`) abriéndolos en modo `"ab"`.
+ 2. **Ordenamiento:** Una vez creado el archivo de cada día, se aplica el algoritmo de Selección para ordenar el archivo binario por `idMozo` utilizando `fseek` y `fwrite` para reubicar los registros.
