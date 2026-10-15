@@ -32,7 +32,7 @@ struct Comanda {
 };
 
 int cargarMozo(Mozo lista[]) { // CARGAR LOS MOZOS de "mozos.dat"
-    FILE* archivoMozo = fopen("mozos.dat", "rb");
+    FILE* archivoMozo = fopen("datos/mozos.dat", "rb");
     if(archivoMozo == NULL) {
         cout << "Error al abrir mozos.dat" << endl;
         return -1;
@@ -74,6 +74,26 @@ bool comprobandoFecha (char fecha[]) { // COMPROBAR QUE LA FECHA ESTE BIEN PUEST
     if (fecha [5] != '-') {
         return false;
     }
+    
+    for (int i = 0; i < 10; i++) {
+        if (i == 2 || i == 5) {
+            continue;
+        }
+        if (fecha[i] < '0' || fecha[i] > '9') {
+            return false;
+        }
+    }
+
+    int dia = (fecha[0] - '0') * 10 + (fecha[1] - '0');
+    int mes = (fecha[3] - '0') * 10 + (fecha[4] - '0');
+
+    if (dia < 1 || dia > 31) {
+        return false;
+    }
+    if (mes < 1 || mes > 12) {
+        return false;
+    }
+
     return true;
 }
 
