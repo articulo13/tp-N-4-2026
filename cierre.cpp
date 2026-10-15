@@ -12,8 +12,7 @@ using namespace std;
 
 struct comanda
 {
-    char fecha[11]; //dd/mm/aa
-    char mozo[53]; //Nombre Apellido
+    
     int idmozo; //id del mozo 
     int codprod; //num de 3 digitos 
     int cantidad;//cantidad de comandas
@@ -93,13 +92,12 @@ fclose(archivo);
 
 }
 //____________________________________________________________PLANILLA DE LOS MOZOS______________________________________________________________
-cout << left << setw(12) << "FECHA" << setw(20) << "MOZO" << setw(10) << "CODPROD" << setw(10) << "CANTIDAD" << setw(10) << "COMISION" << "\n"; 
+cout << left << setw(12)  << "MOZO" << setw(10) << "CODPROD" << setw(10) << "CANTIDAD" << setw(10) << "COMISION" << "\n"; 
 
 for (int m = 0; m < totalmozos; m++) {
         for (int col = 0; col < (int)matriz[m].size(); col++) {
             comanda c = matriz[m][col];
-            cout << left << setw(12) << c.fecha
-                 << setw(20) << c.mozo
+            cout << left << setw(12) << c.idmozo
                  << setw(10) << c.codprod
                  << setw(10) << c.cantidad
                  << fixed << setprecision(2) << setw(10) << c.comision
@@ -110,7 +108,14 @@ for (int m = 0; m < totalmozos; m++) {
 
 //________________________________________________CREACION DE ARCHIVO _______________________________________
 //Guarda la misma planilla de arriba, con todas las comandas agrupadas por mozo.
-FILE* salida = fopen("planilla_semanal.dat", "wb");  //Abrimos en modo escritura binaria para crear el archivo.
+int semana, mes;
+cout << "Numero de semana: ";
+cin >> semana;
+cout << "Numero de mes: ";
+cin >> mes;
+
+string nombre = "comandas_semana_S" + to_string(semana) + "_" + to_string(mes);
+FILE* salida = fopen(nombre.c_str(), "wb");  //Abrimos en modo escritura binaria para crear el archivo.
  
 if (salida == NULL)
 {
