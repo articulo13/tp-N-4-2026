@@ -12,11 +12,6 @@ using namespace std;
 
 struct comanda
 {
-<<<<<<< Updated upstream
-    
-=======
-   
->>>>>>> Stashed changes
     int idmozo; //id del mozo 
     int codprod; //num de 3 digitos 
     int cantidad;//cantidad de comandas
@@ -38,13 +33,11 @@ int totalmozos = 0; //inicializamos la cantidad de mozos en 0 para enumerarlos a
 vector<comanda> matriz[MAX_MOZOS]; 
  
  
-<<<<<<< Updated upstream
-if (argc < 0)
-=======
+
+
     if (argc < 2)
->>>>>>> Stashed changes
 {
-        cout << "No llegaron archivos para procesar." << endl;
+    cout << "No llegaron archivos para procesar." << endl;
     return 1;
 }
  
@@ -100,20 +93,16 @@ fclose(archivo);
 
 }
 //____________________________________________________________PLANILLA DE LOS MOZOS______________________________________________________________
-<<<<<<< Updated upstream
-cout << left << setw(12)  << "MOZO" << setw(10) << "CODPROD" << setw(10) << "CANTIDAD" << setw(10) << "COMISION" << "\n"; 
-=======
+
+
 cout << left << setw(12) << "MOZO" << setw(10) << "CODPROD" << setw(10) << "CANTIDAD" << setw(10) << "COMISION" << "\n"; 
->>>>>>> Stashed changes
 
 for (int m = 0; m < totalmozos; m++) {
         for (int col = 0; col < (int)matriz[m].size(); col++) {
             comanda c = matriz[m][col];
-<<<<<<< Updated upstream
-            cout << left << setw(12) << c.idmozo
-=======
+
+
             cout << left << setw(12) << c.  idmozo
->>>>>>> Stashed changes
                  << setw(10) << c.codprod
                  << setw(10) << c.cantidad
                  << fixed << setprecision(2) << setw(10) << c.comision
@@ -124,15 +113,7 @@ for (int m = 0; m < totalmozos; m++) {
 
 //________________________________________________CREACION DE ARCHIVO _______________________________________
 //Guarda la misma planilla de arriba, con todas las comandas agrupadas por mozo.
-<<<<<<< Updated upstream
-int semana, mes;
-cout << "Numero de semana: ";
-cin >> semana;
-cout << "Numero de mes: ";
-cin >> mes;
 
-string nombre = "comandas_semana_S" + to_string(semana) + "_" + to_string(mes);
-=======
 int semana = 0; 
 int mes = 0; 
 cout << "Numero de mes: ";
@@ -141,7 +122,7 @@ cout << "Numero de semana: ";
 cin >> semana;
 string nombre = "comandas_semana_S" + to_string(semana) + "_" + to_string( mes); 
 
->>>>>>> Stashed changes
+
 FILE* salida = fopen(nombre.c_str(), "wb");  //Abrimos en modo escritura binaria para crear el archivo.
  
 if (salida == NULL)
