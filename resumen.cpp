@@ -1,132 +1,87 @@
 
 #include <iostream>
-#include <string>
-#include <fstream>
-#include <cstring>   // Necesario para strcmp y strcpy
-#include <iomanip>   // Necesario para setw y left
+#include <cstdio>
+#include <iomanip>
 
 using namespace std;
 
-//Defino los structs que voy a utilizar
+struct Comanda {
+    int idMozo;
+    int codigoProducto;
+    int cantidad;
+    float comision;
+};
 
-struct ComandaHistorica
-  {
-  char  fecha[11];
-  char  nombreMozo[50];
-  int   codigoProducto;
-  int cantidad;
-  float comision;
-  };
-
-//constante
-const int MAX_REGISTROS = 1000;
-
-
-int main()
-{
+int main() {
     int semana = 0;
     int mes = 0;
-    string rutaArchivo;
-    
-       FILE* archivo = NULL;
-       bool prueba1 = false;
+    char rutaArchivo[100];
+    FILE* archivo = NULL;
 
-       // Ciclo de validaci�n para pedir la semana y armar la ruta din�micamente
-       while (prueba1 == false)
-       {
-           cout << "Ingrese numero de semana  : ";
-           cin >> semana;
-           cout << "Ingresar numero de mes: ";
-           cin>> mes;
+    // Pedimos semana y mes hasta que se pueda abrir el archivo correspondiente
+    while (archivo == NULL) {
+        cout << "Ingrese numero de semana (ej: 1): ";
+        cin >> semana;
+        cout << "Ingrese numero de mes (1 a 12): ";
+        cin >> mes;
 
-           // Armamos el nombre del archivo concatenando el texto fijo con la variable ingresada
-           // Si lo guardas dentro de una carpeta "datos/", d�jalo como "datos/comandas_semana_" + semana + ".dat"
-           rutaArchivo = "datos/comandas_semana_S" + to_string(semana) + "-" + to_string(mes) + ".dat";
+        // Formato pedido por la consigna: comandas_semana_sX-mm.dat (ej: s1-06)
+        // Nota: Si el grupo guarda todo en la carpeta "datos/", dejar "datos/comandas_semana_s%d-%02d.dat"
+        snprintf(rutaArchivo, sizeof(rutaArchivo), "datos/comandas_semana_s%d-%02d.dat", semana, mes);
 
-           // Abrimos el archivo en modo lectura binaria
-           archivo = fopen(rutaArchivo.c_str(), "rb");
+        archivo = fopen(rutaArchivo, "rb");
 
-           if (archivo == NULL)
-           {
-               cout << "�El archivo no existe o la ruta es incorrecta! Aseg�rese de escribir bien el c�digo (ej: s1-05).\n" << endl;
-           } else
-           {
-               cout << "�Carga completa!\n" << endl;
-               prueba1 = true;
-           }
-       }
+        if (archivo == NULL) {
+            cout << "No se pudo abrir el archivo: " << rutaArchivo << "\n" << endl;
+        }
+    }
 
-       ComandaHistorica registros[MAX_REGISTROS];
-       int totalregistros = 0;
-       ComandaHistorica c;
+    cout << "\n=======================================================" << endl;
+    cout << left << setw(12) << "ID MOZO"
+         << setw(20) << "PROD. VENDIDOS"
+         << setw(15) << "COMISION TOTAL" << endl;
+    cout << "-------------------------------------------------------" << endl;
 
+    Comanda reg;
+    int totalProductosBuffet = 0;
+    float totalComisionesBuffet = 0.0f;
 
-       //Lectura anticipada
-       int leido = fread(&c, sizeof(ComandaHistorica), 1, archivo);
+    // Lectura para Corte de Control directo sobre el archivo (ya ordenado por idMozo)
+    int leido = fread(&reg, sizeof(Comanda), 1, archivo);
 
-       while (leido == 1 && totalregistros < MAX_REGISTROS)
-       {
-           registros[totalregistros] = c;
-           totalregistros++;
-           leido = fread(&c, sizeof(ComandaHistorica), 1, archivo);
-       }
+    if (leido != 1) {
+        cout << "El archivo esta vacio." << endl;
+        fclose(archivo);
+        return 0;
+    }
 
+    while (leido == 1) {
+        int mozoActual = reg.idMozo;
+        int cantProductosMozo = 0;
+        float comisionMozo = 0.0f;
 
-       if (totalregistros == 0)
-       {
-           cout << "El archivo est� vac�o o no se pudieron leer registros." << endl;
-           return 0;
-       }
+        // Mientras sea el mismo mozo y no se termine el archivo, acumulamos
+        while (leido == 1 && reg.idMozo == mozoActual) {
+            cantProductosMozo += reg.cantidad;
+            comisionMozo += reg.comision;
 
-       //Ordenamiento del arrego por nombreMozo Alfabeticamente. Uso Ordenamiento Burbuja
-       for (int i = 0; i < totalregistros - 1; i++)
-       {
-           for (int j = 0; j < totalregistros - i - 1; j++)
-           {
-               if (strcmp(registros[j].nombreMozo, registros[j + 1].nombreMozo) > 0)
-               {
-                   ComandaHistorica aux = registros[j];
-                   registros[j] = registros[j + 1];
-                   registros[j + 1] = aux;
-               }
-           }
-       }
-fclose(archivo); // cerrar archivo
-       // Corte de Control
-       cout << "MOZO | PROD. VENDIDOS | COMISION TOTAL" << endl;
-               cout << " ---------------------------------------- " << endl;
+            leido = fread(&reg, sizeof(Comanda), 1, archivo);
+        }
 
-       int i = 0;
-       float totalGeneralBuffet = 0;
+        // Mostramos el resumen del mozo actual
+        cout << left << setw(12) << mozoActual
+             << setw(20) << cantProductosMozo
+             << "$ " << fixed << setprecision(2) << comisionMozo << endl;
 
-       while (i < totalregistros)
-       {
-           char mozoActual[50];
-           strcpy(mozoActual, registros[i].nombreMozo);
+        // Acumulamos al total general de la semana
+        totalProductosBuffet += cantProductosMozo;
+        totalComisionesBuffet += comisionMozo;
+    }
 
-           int totalProductosGrupo = 0;
-           float totalComisionGrupo = 0;
+    cout << "=======================================================" << endl;
+    cout << "Total de productos vendidos por el buffet en la semana: " << totalProductosBuffet << endl;
+    cout << "Total general de comisiones a pagar: $ " << fixed << setprecision(2) << totalComisionesBuffet << endl;
 
-           // Subciclo de acumulaci�n al producirse el corte. evalua que no se pase del tama�o del arreglo y luego verifica que estemos hablando del mozo
-           while (i < totalregistros && strcmp(registros[i].nombreMozo, mozoActual) == 0)
-           {
-               totalProductosGrupo = totalProductosGrupo+registros[i].cantidad;
-
-               totalComisionGrupo = totalComisionGrupo + registros[i].comision;
-
-               i++;
-           }
-
-           cout << mozoActual << " | " << totalProductosGrupo << " | $ " << totalComisionGrupo << "\n";//truco de IA porque no me funcionaba el endl debido a mezcla de datos
-
-           totalGeneralBuffet += totalComisionGrupo;
-       }
-
-       cout << "------------------------------------------------------------" << endl; // para la estetica use IA
-       cout << "Total general del buffet: $" << fixed << setprecision(2) << totalGeneralBuffet << endl;
-
-
-
-
-   return 0;
+    fclose(archivo);
+    return 0;
 }
