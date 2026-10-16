@@ -98,3 +98,16 @@ en texto legible. Si tu programa imprime otra cosa al leerlos, revisá los `stru
  * **Obtener id del mozo:** Se recorre el archivo `mozos.dat` comparando el nombre en texto del mozo hasta encontrar la coincidencia y retornar su `idMozo` correspondiente.
  1. **Generación:** Se lee `comandas_historicas.dat` de forma secuencial y se van guardando las comandas en sus respectivos archivos diarios (`comandas_DD-MM-AAAA.dat`) abriéndolos en modo `"ab"`.
  2. **Ordenamiento:** Una vez creado el archivo de cada día, se aplica el algoritmo de Selección para ordenar el archivo binario por `idMozo` utilizando `fseek` y `fwrite` para reubicar los registros.
+
+#### Ventas ('ventas.cpp')
+
+* **Responsables:** 
+  * Nahuel Ezequiel Benitez
+
+* **Resolución de partes clave:**
+  * **Carga de datos:** Al arrancar el programa, se leen `mozos.dat` e `inventario.dat` completos y se guardan en arrays en memoria. Después el programa trabaja con esos arrays hasta que hay algo que guardar.
+  * **Fecha y planilla del día:** La fecha se pide una sola vez y se valida. Con ella se arma el nombre `comandas_DD-MM-AAAA.dat`.
+  * **Login y claves:** Se pide el ID y la clave tanto al principio del programa como al momento de registrar cada venta.
+  * **Registro de la venta:** Si el mozo, el producto y la cantidad son válidos y hay stock, se calcula la comisión y se agrega la comanda a la planilla del día que crea el archivo o reescribe en caso de ya existir. Si algo falla, se descarta solo esa venta y se vuelve al menú.
+  * **Actualización de stock:** Se descuenta en `inventario.dat`, sin reescribirlo entero.
+  * **Ordenamiento:** Al salir del menú se envían todas las comandas del día a un array, se ordenan por `idMozo` y genera el archivo `comandas_DD-MM-AAAA.dat` ordenado.
