@@ -114,9 +114,7 @@ en texto legible. Si tu programa imprime otra cosa al leerlos, revisá los `stru
   * **Actualización de stock:** Se descuenta en `inventario.dat`, sin reescribirlo entero.
   * **Ordenamiento:** Al salir del menú se envían todas las comandas del día a un array, se ordenan por `idMozo` y genera el archivo `comandas_DD-MM-AAAA.dat` ordenado.
 
-
 #### **Cierre (cierre.cpp)**
-
 
 * **Responsables:**
   * Bautista Horacio Reina
