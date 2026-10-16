@@ -24,8 +24,8 @@ const int MAX_REGISTROS = 1000;
 
 int main()
 {
-    int semana;
-    int mes;
+    int semana = 0;
+    int mes = 0;
     string rutaArchivo;
     
        FILE* archivo = NULL;
@@ -71,7 +71,6 @@ int main()
            leido = fread(&c, sizeof(ComandaHistorica), 1, archivo);
        }
 
-       fclose(archivo); // cerrar archivo
 
        if (totalregistros == 0)
        {
@@ -92,7 +91,7 @@ int main()
                }
            }
        }
-
+fclose(archivo); // cerrar archivo
        // Corte de Control
        cout << "MOZO | PROD. VENDIDOS | COMISION TOTAL" << endl;
                cout << " ---------------------------------------- " << endl;
