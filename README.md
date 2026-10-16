@@ -90,7 +90,6 @@ en texto legible. Si tu programa imprime otra cosa al leerlos, revisá los `stru
 #### Normalización (`normalizacion.cpp`)
 
 * **Responsables:**
-
   * Alexander Catari Alarcón (`acatarialarcon-ship-it`): Calcular registros, archivo auxiliar, ordenar archivo,  creación e encriptación de claves y Corte de control para generar el archivo mozos.dat .
   * Kevin Axel Saldaña Medrano  (`[articulo13]`): Actualización de stock con búsqueda binaria, generación dinámica de planillas por fecha y ordenamiento insitu en disco por `idMozo`.
 
@@ -109,12 +108,11 @@ en texto legible. Si tu programa imprime otra cosa al leerlos, revisá los `stru
 * **Corte de Control**: Usaremos este patrón algorítmico para obtener  la comisión total de cada mozo y a su vez  aprovecharemos el primer  bucle While del corte de control  para escribir los datos en mozo.dat (id, nombre, password).
 
 
-
 ### Ventas ('ventas.cpp')
 
 * **Responsables:**
-
   * Nahuel Ezequiel Benitez
+
 * **Resolución de partes clave:**
 
   * **Carga de datos:** Al arrancar el programa, se leen `mozos.dat` e `inventario.dat` completos y se guardan en arrays en memoria. Después el programa trabaja con esos arrays hasta que hay algo que guardar.
@@ -124,12 +122,24 @@ en texto legible. Si tu programa imprime otra cosa al leerlos, revisá los `stru
   * **Actualización de stock:** Se descuenta en `inventario.dat`, sin reescribirlo entero.
   * **Ordenamiento:** Al salir del menú se envían todas las comandas del día a un array, se ordenan por `idMozo` y genera el archivo `comandas_DD-MM-AAAA.dat` ordenado.
 
-#### **Cierre (cierre.cpp)**
+### Cierre ('cierre.cpp')
 
 * **Responsables:**
   * Bautista Horacio Reina
+
 * **Explicacion del codigo:**
   * **Busqueda de archivos:** El principio del mes, decidimos que arranque con una busqueda de archivos que entran mediante fechas, por eso te pide la fecha del dia que quieras buscar para que abra el archivo. Claramente verifica la existencia de esa fecha.
   * **Lectura de archivo:** Analizamos los mozos, y anotamos a los que aparecen por primera vez, luego a los que se repiten los anotamos detras de si mismo en la lista.
   * **Planilla de mozos:** Una vez analizado el archivo crea una planilla de archivos, creando una en la terminal para verificar que se pueda ver de manera sencilla lo que se anoto.
   * **Creacion de Archivos:** Se crea un archivo que copia la planilla mostrada en la terminal, luego de la creacion te pide tanto la semana como el mes, para darle el nombre al archivo.
+
+
+### Resumen ('resumen.cpp')
+
+* **Responsables:**
+  * Lucas Tosco
+
+* **Busqueda de archivos:** Al iniciar, el programa solicita el número de semana y el mes para buscar y abrir la planilla semanal correspondiente (`comandas_semana_sX-mm.dat`). Además, verifica mediante un ciclo que el archivo exista antes de avanzar con la lectura.
+* **Lectura de archivo y Corte de Control:** Como el archivo semanal ya se encuentra ordenado por número de mozo, se recorre directamente leyendo cada comanda con `fread`. Mediante un corte de control por `idMozo`, se agrupan las ventas del mismo mozo para ir acumulando la cantidad de productos vendidos y su comisión.
+* **Resumen por mozo:** Cada vez que cambia el mozo leído, se imprime en la terminal el ID del mozo junto con el total de productos que vendió en la semana y la plata de comisión que le corresponde cobrar.
+* **Total general del buffet:** Al mismo tiempo que se calculan los datos de cada mozo, se suman a una variable para mostrar al final de la pantalla el total de productos que vendió el buffet en toda la semana y el monto total de comisiones.
