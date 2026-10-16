@@ -90,7 +90,7 @@ en texto legible. Si tu programa imprime otra cosa al leerlos, revisá los `stru
 #### Normalización (`normalizacion.cpp`)
 
 * **Responsables:** 
-  * Alexander Catari Alarcón (`acatarialarcon-ship-it`): Creación del archivo auxiliar, ordenamiento, corte de control para extraer mozos únicos, solicitud de contraseñas y cifrado de claves.
+  * Alexander Catari Alarcón (`acatarialarcon-ship-it`): Calcular registros, archivo auxiliar, ordenar archivo,  creación e encriptación de claves y Corte de control para generar el archivo mozos.dat .
   * Kevin Axel Saldaña Medrano  (`[articulo13]`): Actualización de stock con búsqueda binaria, generación dinámica de planillas por fecha y ordenamiento insitu en disco por `idMozo`.
 
 * **Resolución de partes clave:**
@@ -98,6 +98,14 @@ en texto legible. Si tu programa imprime otra cosa al leerlos, revisá los `stru
  * **Obtener id del mozo:** Se recorre el archivo `mozos.dat` comparando el nombre en texto del mozo hasta encontrar la coincidencia y retornar su `idMozo` correspondiente.
  1. **Generación:** Se lee `comandas_historicas.dat` de forma secuencial y se van guardando las comandas en sus respectivos archivos diarios (`comandas_DD-MM-AAAA.dat`) abriéndolos en modo `"ab"`.
  2. **Ordenamiento:** Una vez creado el archivo de cada día, se aplica el algoritmo de Selección para ordenar el archivo binario por `idMozo` utilizando `fseek` y `fwrite` para reubicar los registros.
+
+
+* **Calcular Registros:** Usamos ftell al final del archivo y sizeof en los archivos para obtener la cantidad de registros del archivo que recibe.
+* **Archivo Auxiliar**: Cree un archivo auxiliar  para evitar alteras los datos de comandas_historicas.dat, el mismo se  eliminara mas adelante después de cumplir  su papel.
+* **Ordenar Archivo**: Use el método de selección  para  ordenar de menor  a mayor  los registros del archivo  usando la variable "nombreMozo" como campo clave.
+* **Creación y Encriptación claves**: Como la encriptación debe ser "automática" decide utilizar los primeros 5 caracteres de la variable nombreMozo de comandas_historicas.dat (evitando los espacios).Como la clave no se debe guardar tal cual en el archivo mozos.dat entonces le sumaremos 5 a cada carácter de la clave.
+* **Corte de Control**: Usaremos este patrón algorítmico para obtener  la comisión total de cada mozo y a su vez  aprovecharemos el primer  bucle While del corte de control  para escribir los datos en mozo.dat (id, nombre, password).
+
 
 #### Ventas ('ventas.cpp')
 
