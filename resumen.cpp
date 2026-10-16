@@ -24,29 +24,34 @@ const int MAX_REGISTROS = 1000;
 
 int main()
 {
-   string semana, rutaArchivo;
+    int semana;
+    int mes;
+    string rutaArchivo;
+    
        FILE* archivo = NULL;
        bool prueba1 = false;
 
-       // Ciclo de validación para pedir la semana y armar la ruta dinámicamente
+       // Ciclo de validaciï¿½n para pedir la semana y armar la ruta dinï¿½micamente
        while (prueba1 == false)
        {
-           cout << "Ingrese la semana (ej: s1-05): ";
+           cout << "Ingrese numero de semana  : ";
            cin >> semana;
+           cout << "Ingresar numero de mes: ";
+           cin>> mes;
 
            // Armamos el nombre del archivo concatenando el texto fijo con la variable ingresada
-           // Si lo guardas dentro de una carpeta "datos/", déjalo como "datos/comandas_semana_" + semana + ".dat"
-           rutaArchivo = "comandas_semana_" + semana + ".dat";
+           // Si lo guardas dentro de una carpeta "datos/", dï¿½jalo como "datos/comandas_semana_" + semana + ".dat"
+           rutaArchivo = "datos/comandas_semana_S" + to_string(semana) + "-" + to_string(mes) + ".dat";
 
            // Abrimos el archivo en modo lectura binaria
            archivo = fopen(rutaArchivo.c_str(), "rb");
 
            if (archivo == NULL)
            {
-               cout << "¡El archivo no existe o la ruta es incorrecta! Asegúrese de escribir bien el código (ej: s1-05).\n" << endl;
+               cout << "ï¿½El archivo no existe o la ruta es incorrecta! Asegï¿½rese de escribir bien el cï¿½digo (ej: s1-05).\n" << endl;
            } else
            {
-               cout << "¡Carga completa!\n" << endl;
+               cout << "ï¿½Carga completa!\n" << endl;
                prueba1 = true;
            }
        }
@@ -70,7 +75,7 @@ int main()
 
        if (totalregistros == 0)
        {
-           cout << "El archivo está vacío o no se pudieron leer registros." << endl;
+           cout << "El archivo estï¿½ vacï¿½o o no se pudieron leer registros." << endl;
            return 0;
        }
 
@@ -103,7 +108,7 @@ int main()
            int totalProductosGrupo = 0;
            float totalComisionGrupo = 0;
 
-           // Subciclo de acumulación al producirse el corte. evalua que no se pase del tamaño del arreglo y luego verifica que estemos hablando del mozo
+           // Subciclo de acumulaciï¿½n al producirse el corte. evalua que no se pase del tamaï¿½o del arreglo y luego verifica que estemos hablando del mozo
            while (i < totalregistros && strcmp(registros[i].nombreMozo, mozoActual) == 0)
            {
                totalProductosGrupo = totalProductosGrupo+registros[i].cantidad;
