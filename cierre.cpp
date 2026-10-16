@@ -21,8 +21,7 @@ struct comanda
 
 
 
-int main(){//En nuestras computadoras no funciono de manera automatica, 
-                                //ingresen el archivo a utilizar de manera manual en la terminal 
+int main(){
 
 comanda registros[MAX_REGISTROS]; 
 int totalregistros = 0; 
